@@ -9,6 +9,19 @@ Versioning follows [Semantic Versioning](https://semver.org/):
 
 ---
 
+## [1.1.0] — 2026-06-18
+
+Closes the improvement cycle gap: LOGs are now persisted automatically and analyzable via `arch-evolve`.
+
+### Added
+- **Stop hook** (`scripts/on-stop.sh`) — extracts `## 📝 LOG (ARCH Kaizen)` blocks from every Claude response and appends them with timestamp and project path to `~/.arch/retro.md`
+- **`arch-evolve` skill** — reads `~/.arch/retro.md`, clusters `❌` failure patterns with 3+ occurrences, and proposes concrete diffs for `SKILL.md` pending human approval
+
+### How to use
+After installing the updated plugin, LOGs are captured automatically. Run `arch-evolve` after accumulating 5+ LOGs to get improvement proposals.
+
+---
+
 ## [1.0.0] — 2026-06-18
 
 Initial release of the ARCH protocol as an installable Claude Code plugin.
