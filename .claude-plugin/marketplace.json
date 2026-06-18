@@ -9,6 +9,7 @@
   "plugins": [
     {
       "name": "arch-protocol",
+      "version": "1.0.0",
       "description": "Enforces atomic tasks, pre-flight validation, context declaration, and kaizen retrospectives on every software task",
       "author": {
         "name": "Valentín Liñeiro"
