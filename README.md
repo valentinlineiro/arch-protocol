@@ -31,7 +31,7 @@ The protocol is deliberately resistant to pressure. When you say *"just write th
 ## Install
 
 ```bash
-/plugin add-marketplace https://github.com/valenlb/arch-protocol
+/plugin add-marketplace https://github.com/valentinlineiro/arch-protocol
 /plugin install arch-protocol@arch-protocol
 ```
 
