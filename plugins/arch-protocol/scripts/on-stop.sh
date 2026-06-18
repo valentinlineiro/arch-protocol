@@ -1,10 +1,14 @@
 #!/bin/bash
 # ARCH Protocol — Stop hook
-# Extracts LOG (ARCH Kaizen) blocks from Claude's response and persists them
-# to ~/.arch/retro.md for use by arch-evolve.
+# Extracts LOG (ARCH Kaizen) blocks from Claude's response and persists them.
+#
+# Always writes to:   ~/.arch/retro.md  (global — for evolving SKILL.md)
+# Also writes to:     ./.arch/retro.md  (local — if .arch/ exists in current project)
 
-ARCH_RETRO="$HOME/.arch/retro.md"
-mkdir -p "$(dirname "$ARCH_RETRO")"
+ARCH_GLOBAL="$HOME/.arch/retro.md"
+ARCH_LOCAL="$(pwd)/.arch/retro.md"
+
+mkdir -p "$(dirname "$ARCH_GLOBAL")"
 
 INPUT=$(cat)
 
@@ -31,9 +35,16 @@ LOG_BLOCK=$(echo "$RESPONSE" | awk '
 
 [ -z "$LOG_BLOCK" ] && exit 0
 
-# Append to retro.md with metadata
-{
-    printf '\n<!-- ARCH LOG | %s | %s -->\n' "$(date '+%Y-%m-%d %H:%M')" "$(pwd)"
-    echo "$LOG_BLOCK"
-    echo ""
-} >> "$ARCH_RETRO"
+# Build the entry with metadata
+ENTRY=$(printf '\n<!-- ARCH LOG | %s | %s -->\n%s\n' \
+    "$(date '+%Y-%m-%d %H:%M')" \
+    "$(pwd)" \
+    "$LOG_BLOCK")
+
+# Always write globally
+echo "$ENTRY" >> "$ARCH_GLOBAL"
+
+# Write locally only if the project has opted in (.arch/ directory exists)
+if [ -d "$(pwd)/.arch" ]; then
+    echo "$ENTRY" >> "$ARCH_LOCAL"
+fi

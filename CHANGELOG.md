@@ -9,6 +9,22 @@ Versioning follows [Semantic Versioning](https://semver.org/):
 
 ---
 
+## [1.2.0] — 2026-06-18
+
+Hybrid global/local retro architecture for the improvement cycle.
+
+### Changed
+- **Stop hook** now writes to both `~/.arch/retro.md` (always) and `./.arch/retro.md` (only if `.arch/` exists in the current project). Local capture is opt-in via `mkdir .arch`.
+- **`arch-evolve` skill** extended with `--global` and `--local` flags. Default (no args) detects available data and asks the user which scope to analyze. Patterns are auto-classified as global (protocol habits) or local (tech/domain-specific) with proposals targeting `SKILL.md` vs `CLAUDE.md`/`MEMORY.md` accordingly.
+
+### How to use local capture
+```bash
+mkdir .arch   # opt in for this project
+```
+From that point, every LOG in this project is written to both the global and local retro files.
+
+---
+
 ## [1.1.0] — 2026-06-18
 
 Closes the improvement cycle gap: LOGs are now persisted automatically and analyzable via `arch-evolve`.

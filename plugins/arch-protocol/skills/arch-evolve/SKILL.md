@@ -1,67 +1,88 @@
 ---
 name: arch-evolve
-description: Use when the user wants to analyze accumulated ARCH LOGs, detect failure patterns, and get proposed improvements to SKILL.md
+description: Use when the user wants to analyze accumulated ARCH LOGs, detect failure patterns, and get proposed improvements to SKILL.md or CLAUDE.md
 ---
 
 # arch-evolve
 
 ## Overview
 
-Reads `~/.arch/retro.md`, clusters failure patterns from LOG entries, and proposes concrete changes to the ARCH skill. Does not apply changes — proposals require human review (EYES).
+Reads accumulated LOG entries, clusters failure patterns, and proposes concrete changes — either to the global ARCH skill (`SKILL.md`) or to the local project context (`CLAUDE.md` / `MEMORY.md`). Never applies changes without explicit approval.
+
+## Two scopes, two purposes
+
+| Scope | Source | Evolves | Use when |
+|---|---|---|---|
+| `--global` | `~/.arch/retro.md` | `SKILL.md` | Pattern is universal (repeats across projects) |
+| `--local` | `./.arch/retro.md` | `CLAUDE.md` or `MEMORY.md` | Pattern is specific to this project, stack, or domain |
+
+Local capture is opt-in: run `mkdir .arch` in a project to start collecting local LOGs there.
 
 ## Workflow
 
-**1. Read retro.md**
+**1. Determine scope**
 
-```bash
-cat ~/.arch/retro.md
-```
+- If called with `--global`: use `~/.arch/retro.md` → propose changes to `SKILL.md`
+- If called with `--local`: use `./.arch/retro.md` → propose changes to `CLAUDE.md` / `MEMORY.md`
+- If called with no args: check which files exist and ask:
+  *"Tengo datos en [global/local/ambos]. ¿Quieres analizar el skill global (SKILL.md) o el contexto local (CLAUDE.md)?"*
 
-If the file is empty or missing, tell the user: *"No hay LOGs acumulados todavía. Usa ARCH en algunas tareas primero."* Stop there.
+**2. Check data**
 
-**2. Cluster failures**
+Read the retro file. If fewer than 5 LOG entries exist, say so and suggest waiting. If the file is missing, explain how to enable capture (`mkdir .arch` for local, the hook handles global automatically).
 
-Extract all `❌` lines. Group by semantic similarity. Count occurrences. Focus on patterns that appear 3+ times — single occurrences are noise.
+**3. Cluster failures**
 
-**3. Report**
+Extract all `❌` lines. Group by semantic similarity. Count occurrences. Only surface patterns with 3+ occurrences — single instances are noise.
 
-Present findings in this format:
-```
-📊 Patrones detectados en [N] LOGs:
+**4. Classify each pattern**
 
-[count]× "[failure text]"
-[count]× "[failure text]"
-...
-```
+For each pattern, determine scope automatically:
+- **Global** → mentions forgetting a protocol step (GATE, ANCHOR, ATOM, LOG) or a universal habit
+- **Local** → mentions a specific technology, framework, API, or domain concept
 
-**4. Propose changes**
+If ambiguous, ask the user.
 
-For each pattern with 3+ occurrences, generate a concrete proposed change to `SKILL.md`:
+**5. Report**
 
 ```
-📝 Propuesta para SKILL.md:
+📊 Patrones detectados en [N] LOGs ([scope]):
 
+[count]× "[failure summary]" → [global|local]
+[count]× "[failure summary]" → [global|local]
+```
+
+**6. Propose changes (max 3)**
+
+For **global** patterns, propose a diff to `SKILL.md`:
+```
+📝 Propuesta global para SKILL.md:
 [+] Añadir a Rationalization Table:
-| "[pattern]" | [suggested counter] |
-
-[-] Modificar regla [STEP]:
-  Antes: [current wording]
-  Después: [proposed wording]
+| "[pattern]" | [counter] |
 ```
 
-One proposal per pattern. No more than 3 proposals total — prioritize by frequency.
+For **local** patterns, propose an addition to `CLAUDE.md` or `MEMORY.md`:
+```
+📝 Propuesta local para CLAUDE.md:
+[+] Añadir sección:
+## [Topic]
+[specific context or rule for this project]
+```
 
-**5. Ask for approval**
+**7. Ask for approval**
 
-*"¿Aplicamos alguno de estos cambios? Di el número o 'ninguno'."*
+*"¿Aplicamos alguno? Di el número o 'ninguno'."*
 
-If approved: edit `~/.claude/skills/arch-protocol/SKILL.md` with the change, then remind the user to also update the repo at `plugins/arch-protocol/skills/arch-protocol/SKILL.md` and bump the patch version.
+If approved:
+- Global: edit the installed skill at `~/.claude/skills/arch-protocol/SKILL.md` and remind the user to also update the repo and bump the patch version
+- Local: edit `CLAUDE.md` or `MEMORY.md` in the current project
 
-If rejected: note the reason (if given) and suggest revisiting after more LOGs accumulate.
+If rejected: note the reason and suggest revisiting after more LOGs accumulate.
 
 ## Rules
 
 - Never apply changes without explicit approval.
-- Never propose more than 3 changes at once — cognitive overload defeats kaizen.
-- If fewer than 5 LOGs exist, say so and suggest waiting for more data.
-- Proposals must be specific and diff-like, not vague ("improve wording").
+- Max 3 proposals per run — prioritize by frequency.
+- Global changes affect all users who install the plugin — be conservative.
+- Local changes are safe to experiment with — they only affect this project.
+- If a pattern appears in both global and local files, it's global.
