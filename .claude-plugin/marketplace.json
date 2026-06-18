@@ -1,17 +1,25 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "arch-protocol",
   "description": "ARCH protocol — structured human+AI software development based on Toyota Production System principles",
   "owner": {
     "name": "Valentín Liñeiro",
-    "url": "https://github.com/valentinlineiro"
+    "email": "valentinlineiro@gmail.com"
   },
   "plugins": [
     {
       "name": "arch-protocol",
       "description": "Enforces atomic tasks, pre-flight validation, context declaration, and kaizen retrospectives on every software task",
-      "source": "./plugins/arch-protocol",
+      "author": {
+        "name": "Valentín Liñeiro"
+      },
       "category": "development",
-      "tags": ["workflow", "tps", "discipline", "kaizen", "process"]
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/valentinlineiro/arch-protocol.git",
+        "path": "plugins/arch-protocol"
+      },
+      "homepage": "https://github.com/valentinlineiro/arch-protocol"
     }
   ]
 }
