@@ -4,23 +4,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-A Claude Code plugin that ships the ARCH skill. The plugin follows the standard Claude Code plugin structure:
+A Claude Code marketplace that ships the ARCH skill. The repo doubles as both the marketplace index and the plugin source:
 
 ```
-.claude-plugin/plugin.json   # Plugin manifest
-skills/arch-protocol/
-  SKILL.md                   # The ARCH skill definition
-README.md                    # Installation instructions
+.claude-plugin/marketplace.json              # Marketplace manifest
+plugins/arch-protocol/
+  .claude-plugin/plugin.json                 # Plugin manifest
+  skills/arch-protocol/
+    SKILL.md                                 # The ARCH skill definition
+README.md                                    # Installation instructions
 ```
 
 ## Installing locally for testing
 
 ```bash
-/plugin add-marketplace https://github.com/valenlb/arch-protocol
+/plugin add-marketplace https://github.com/valentinlineiro/arch-protocol
 /plugin install arch-protocol@arch-protocol
 ```
 
-To test changes without publishing, copy `skills/arch-protocol/SKILL.md` to `~/.claude/skills/arch-protocol/SKILL.md`.
+To test skill changes without publishing, copy `plugins/arch-protocol/skills/arch-protocol/SKILL.md` to `~/.claude/skills/arch-protocol/SKILL.md`.
 
 ## Publishing to a custom marketplace
 

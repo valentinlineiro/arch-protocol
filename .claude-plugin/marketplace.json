@@ -1,0 +1,17 @@
+{
+  "name": "arch-protocol",
+  "description": "ARCH protocol — structured human+AI software development based on Toyota Production System principles",
+  "owner": {
+    "name": "Valentín Liñeiro",
+    "url": "https://github.com/valentinlineiro"
+  },
+  "plugins": [
+    {
+      "name": "arch-protocol",
+      "description": "Enforces atomic tasks, pre-flight validation, context declaration, and kaizen retrospectives on every software task",
+      "source": "./plugins/arch-protocol",
+      "category": "development",
+      "tags": ["workflow", "tps", "discipline", "kaizen", "process"]
+    }
+  ]
+}
