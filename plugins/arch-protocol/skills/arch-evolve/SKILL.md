@@ -84,6 +84,13 @@ For **✅ success patterns** (5+ occurrences), propose a reinforcement note — 
 ¿Quieres añadir un ejemplo concreto a la documentación del skill?
 ```
 
+For **stale rules** — rules in SKILL.md or CLAUDE.md absent from ❌ and ✅ lines across the last 20+ consecutive LOG entries — propose archiving (not deletion). Surface this separately, after the numbered proposals:
+```
+📦 Propuesta de archivo:
+La regla "[rule text]" no aparece en los últimos [N] LOGs.
+¿La movemos a ## Reglas Archivadas? (no se elimina — se puede restaurar en cualquier momento)
+```
+
 **7. Ask for approval**
 
 *"¿Aplicamos alguno? Di el número o 'ninguno'."*
@@ -102,3 +109,6 @@ If rejected: note the reason and suggest revisiting after more LOGs accumulate.
 - Local changes are safe to experiment with — they only affect this project.
 - If a pattern appears in both global and local files, it's global.
 - Suggested cadence: run after every 10 new LOG entries. A simple habit: run at the end of each sprint or after any session where repeated ❌ entries appeared.
+- Archive proposals have a higher bar than additions: 20+ consecutive LOGs with no hits. A rule that appeared once months ago is not stale.
+- Archive means move to `## Archived Rules` at the bottom of the target file — never hard delete. The user can restore at any time.
+- Maximum 1 archive proposal per run, surfaced separately after the numbered proposals with *"Además, tengo una propuesta de archivo. ¿Quieres verla?"*
