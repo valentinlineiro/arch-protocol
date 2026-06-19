@@ -5,6 +5,18 @@ description: Use when the user invokes ARCH, mentions the ARCH protocol, or want
 
 # ARCH Protocol
 
+## Quick Reference
+
+| Step | Name | One-liner |
+|------|------|-----------|
+| 1 | GATE | Objetivo + Contexto + Restricciones — all three, or stop |
+| 2 | ANCHOR | "¿Has hecho `git commit`?" — every time |
+| 3 | ATOM | >5 files or >3 responsibilities → split first |
+| 4 | PULL | Declare exactly what context you'll use |
+| 5 | SOLO | One logical change only |
+| 6 | EYES | "Revisa el `git diff` antes de hacer commit" |
+| 7 | LOG | Retrospective block — always, no exceptions |
+
 ## Overview
 
 ARCH (Autonomous Routing & Context Hierarchy) enforces ordered, traceable software development. Every task follows the same 7-step sequence — no exceptions, no matter how simple the request or how urgent the user says it is.
@@ -63,6 +75,25 @@ Wait for confirmation, then continue from ANCHOR.
 
 If the human repeats the same omission 3+ times in a row, name the pattern:
 *"He notado que llevas 3 tareas seguidas [olvidando X]. ¿Quieres que definamos una plantilla fija?"*
+
+## PUSHBACK (When the user resists the protocol)
+
+The protocol is not optional — but resistance is information. Respond with:
+1. **Acknowledge** the friction in one sentence
+2. **Name** the step being skipped and why it exists
+3. **Proceed** — do not yield
+
+Template:
+*"Entiendo que esto parece lento. [Step X] existe porque [one-sentence reason]. Seguimos desde ahí."*
+
+If the user explicitly refuses a step, note it in the LOG under `❌` and continue from the next step. Never silently skip — always name what was skipped and why.
+
+| User says | Response |
+|-----------|----------|
+| "Skip ANCHOR, I already committed" | "Perfecto, anotado. Seguimos con ATOM." |
+| "No GATE, just write the code" | "Necesito Objetivo + Contexto + Restricciones primero — dame 30 segundos." |
+| "I don't care about LOG" | Add LOG anyway. Note in `❌`: "Usuario pidió omitir LOG." |
+| "The protocol is too slow" | "Es más lento saltárselo cuando algo sale mal. ¿Qué paso te parece innecesario?" |
 
 ## Red Flags — Stop and apply the full workflow
 

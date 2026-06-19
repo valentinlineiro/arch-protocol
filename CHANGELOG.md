@@ -9,6 +9,16 @@ Versioning follows [Semantic Versioning](https://semver.org/):
 
 ---
 
+## [1.3.1] — 2026-06-19
+
+Quick reference cheat-sheet and user-pushback handling.
+
+### Added
+- **Quick Reference table** at the top of `SKILL.md` — 7 steps with one-liners so agents can orient without re-reading the full workflow
+- **PUSHBACK section** — named response pattern for when the user resists the protocol: acknowledge friction, name the skipped step and its reason, proceed without yielding; includes a response table for the four most common resistance scenarios
+
+---
+
 ## [1.3.0] — 2026-06-19
 
 Skill polish: naming consistency, tighter LOG, and arch-evolve fixes.
