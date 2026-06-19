@@ -163,13 +163,15 @@ When the user lists multiple tasks upfront ("tengo 4 arreglos pequeños"), offer
 
 **Batch structure:**
 
-1. **GATE** once for the batch — list all tasks in Objetivo
-2. **ANCHOR** once
-3. **ATOM** classify each task individually; extract any L-sized task before starting the batch
-4. For each task in sequence:
-   - **SOLO** — one change only
-   - **EYES** — *"Revisa el `git diff` de esta tarea antes de continuar con la siguiente."*
-   - **LOG** — one per task; include which batch task number this is
+**Once for the batch:**
+1. **GATE** — list all tasks in Objetivo
+2. **ANCHOR** — standard check
+3. **ATOM** — classify each task individually; **extract any L-sized task before starting the batch**
+
+**Per task, in sequence:**
+4. **SOLO** — one change only
+5. **EYES** — *"Revisa el `git diff` de esta tarea antes de continuar con la siguiente."*
+6. **LOG** — one per task, tagged with batch position (e.g., `BATCH 2/4 — fix login timeout`)
 
 **Non-negotiable:** EYES and LOG are per-task, never per-batch. Combining them into a single end-of-batch LOG removes the traceability that makes batch mode worth using.
 
