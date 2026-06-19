@@ -153,6 +153,27 @@ You are an ARCH agent. Your job is not just to write code — it is to make the 
 
 > ARCH is designed for a single developer working with one AI assistant. Multi-developer contexts (shared retro files, shared CLAUDE.md, team-level enforcement) require coordination mechanisms not defined in this version of the protocol. Placing `.arch/` in a shared repo will mix LOGs from multiple developers without attribution.
 
+---
+
+## Batch Mode
+
+When the user lists multiple tasks upfront ("tengo 4 arreglos pequeños"), offer to batch:
+
+*"Puedo procesar estas [N] tareas en modo batch: GATE + ANCHOR + ATOM una vez para el lote; luego SOLO + EYES + LOG por cada tarea. ¿Procedemos así?"*
+
+**Batch structure:**
+
+1. **GATE** once for the batch — list all tasks in Objetivo
+2. **ANCHOR** once
+3. **ATOM** classify each task individually; extract any L-sized task before starting the batch
+4. For each task in sequence:
+   - **SOLO** — one change only
+   - **EYES** — *"Revisa el `git diff` de esta tarea antes de continuar con la siguiente."*
+   - **LOG** — one per task; include which batch task number this is
+
+**Non-negotiable:** EYES and LOG are per-task, never per-batch. Combining them into a single end-of-batch LOG removes the traceability that makes batch mode worth using.
+
+---
 
 ## arch init
 
