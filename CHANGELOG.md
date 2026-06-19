@@ -9,6 +9,19 @@ Versioning follows [Semantic Versioning](https://semver.org/):
 
 ---
 
+## [1.4.0] — 2026-06-19
+
+arch-evolve learning loop extended; Language Design principle and team scope documented in arch-protocol.
+
+### Added
+- **arch-evolve: ✅ pattern mining** — success patterns now extracted alongside failure patterns; threshold 5+ (vs 3 for ❌) to account for lower signal quality in positive entries
+- **arch-evolve: archive/deprecation mechanism** — detects rules absent from 20+ consecutive LOGs and proposes moving them to `## Archived Rules`; never hard-deletes; max 1 per run, surfaced separately
+- **arch-evolve: cadence guidance** — Rules section now suggests running every 10 new LOG entries
+- **arch-protocol: Language Design section** — documents the Spanish/work-language register shift as a deliberate UX mechanism; prevents future "helpful" translation that would break the boundary
+- **arch-protocol: team scope boundary** — Identity section now explicitly states single-developer scope and names the shared `.arch/` footgun
+
+---
+
 ## [1.3.1] — 2026-06-19
 
 Quick reference cheat-sheet and user-pushback handling.
