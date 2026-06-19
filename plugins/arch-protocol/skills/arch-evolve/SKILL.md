@@ -31,9 +31,12 @@ Local capture is opt-in: run `mkdir .arch` in a project to start collecting loca
 
 Read the retro file. If fewer than 5 LOG entries exist, say so and suggest waiting. If the file is missing, explain how to enable capture (`mkdir .arch` for local, the hook handles global automatically).
 
-**3. Cluster failures**
+**3. Cluster patterns**
 
-Extract all `❌` lines. Group by semantic similarity. Count occurrences. Only surface patterns with 3+ occurrences — single instances are noise.
+Extract all `❌` lines and all `✅` lines separately. Group each set by semantic similarity. Count occurrences.
+
+- **Failure patterns (❌):** Surface only patterns with 3+ occurrences — fewer is noise.
+- **Success patterns (✅):** Surface only patterns with 5+ occurrences — users write ✅ entries less carefully, so the threshold is higher.
 
 **4. Classify each pattern**
 
@@ -48,9 +51,14 @@ If ambiguous, ask the user.
 ```
 📊 Patrones detectados en [N] LOGs ([scope]):
 
+❌ Fallos recurrentes:
 [count]× "[failure summary]" → [global|local]
-[count]× "[failure summary]" → [global|local]
+
+✅ Lo que funciona bien (5+ menciones):
+[count]× "[success summary]"
 ```
+
+(Omit the ✅ block if no success pattern reaches the 5-occurrence threshold.)
 
 **6. Propose changes (max 3)**
 
@@ -67,6 +75,13 @@ For **local** patterns, propose an addition to `CLAUDE.md` or `MEMORY.md`:
 [+] Añadir sección:
 ## [Topic]
 [specific context or rule for this project]
+```
+
+For **✅ success patterns** (5+ occurrences), propose a reinforcement note — optional and does not count against the 3-proposal limit:
+```
+📝 Propuesta de refuerzo:
+[count]× "[success summary]" — este paso funciona bien de forma consistente.
+¿Quieres añadir un ejemplo concreto a la documentación del skill?
 ```
 
 **7. Ask for approval**
@@ -86,3 +101,4 @@ If rejected: note the reason and suggest revisiting after more LOGs accumulate.
 - Global changes affect all users who install the plugin — be conservative.
 - Local changes are safe to experiment with — they only affect this project.
 - If a pattern appears in both global and local files, it's global.
+- Suggested cadence: run after every 10 new LOG entries. A simple habit: run at the end of each sprint or after any session where repeated ❌ entries appeared.
