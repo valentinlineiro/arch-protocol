@@ -1,0 +1,19 @@
+name: ARCH Skill Tests
+
+on:
+  push:
+    paths:
+      - 'plugins/arch-protocol/skills/arch-protocol/SKILL.md'
+      - 'tests/**'
+  pull_request:
+    paths:
+      - 'plugins/arch-protocol/skills/arch-protocol/SKILL.md'
+      - 'tests/**'
+
+jobs:
+  marker-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check scenario markers against SKILL.md
+        run: bash scripts/check-markers.sh
