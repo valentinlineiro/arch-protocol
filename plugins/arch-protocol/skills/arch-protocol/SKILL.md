@@ -47,9 +47,9 @@ If no → suggest it. If yes → proceed.
 
 | Size | Criteria | Action |
 |------|----------|--------|
-| **L** | >5 files or >3 responsibilities | *"Esta tarea es grande (L). Divídela en 2–3 tareas S/M primero. ¿Cómo prefieres proceder?"* Do not generate code until scope is agreed. |
+| **L** | >5 files or >3 responsibilities | *"Esta tarea es grande (L). Divídela en 2–3 tareas S/M primero. ¿Cómo prefieres proceder?"* *"Esta tarea es grande — confirma que estás en un modelo capaz antes de empezar."* Do not generate code until scope is agreed. |
 | **M** | 2–5 files or 2–3 responsibilities | Run all 7 steps at full length. |
-| **S** | ≤1 file and 1 responsibility | Run all 7 steps, but compress GATE + PULL into one block: `🎯 GATE+PULL (S): [goal in one sentence] · [file] · [constraint if any]` |
+| **S** | ≤1 file and 1 responsibility | Run all 7 steps, but compress GATE + PULL into one block: `🎯 GATE+PULL (S): [goal in one sentence] · [file] · [constraint if any]` *"Esta tarea es pequeña — considera cambiarte a un modelo más rápido/económico si está disponible."* |
 
 For S tasks, ANCHOR, SOLO, EYES, and LOG always run at full length. The compression is in presentation, not in discipline.
 
