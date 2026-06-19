@@ -33,6 +33,20 @@ else
   echo "✅ .gitignore creado con .arch/"
 fi
 
+# Auto-activate ARCH via CLAUDE.md
+ARCH_MARKER="## ARCH Protocol"
+if [ -f "CLAUDE.md" ]; then
+  if ! grep -qF "$ARCH_MARKER" CLAUDE.md; then
+    printf '\n## ARCH Protocol\nThis project uses the ARCH protocol. Apply it to every task.\n' >> CLAUDE.md
+    echo "✅ ARCH Protocol añadido a CLAUDE.md — se activará automáticamente en cada sesión"
+  else
+    echo "ℹ️  CLAUDE.md ya contiene la sección ARCH Protocol"
+  fi
+else
+  printf '## ARCH Protocol\nThis project uses the ARCH protocol. Apply it to every task.\n' > CLAUDE.md
+  echo "✅ CLAUDE.md creado con sección ARCH Protocol"
+fi
+
 # Verify global retro file is reachable
 GLOBAL="$HOME/.arch/retro.md"
 if [ -f "$GLOBAL" ]; then
@@ -41,8 +55,9 @@ if [ -f "$GLOBAL" ]; then
 elif [ -d "$HOME/.arch" ]; then
   echo "ℹ️  ~/.arch/ existe pero retro.md aún está vacío — el hook escribirá aquí al terminar la primera sesión"
 else
-  echo "⚠️  ~/.arch/ no encontrado — el hook de Claude Code puede no estar activo."
-  echo "   Asegúrate de que el plugin arch-protocol está instalado en Claude Code."
+  echo "⚠️  Plugin arch-protocol no detectado. Para instalarlo, ejecuta en Claude Code:"
+  echo "   /plugin add-marketplace https://github.com/valentinlineiro/arch-protocol"
+  echo "   /plugin install arch-protocol@arch-protocol"
 fi
 
 echo ""

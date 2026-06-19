@@ -178,14 +178,20 @@ If the user asks how to set up ARCH for a new project, guide them:
 bash "$(find ~/.claude/plugins -name "arch-init.sh" | head -1)"
 ```
 
-*"Si el comando no devuelve nada, el plugin puede no estar instalado. Instala arch-protocol desde el marketplace de Claude Code primero."*
+*"Si el comando no devuelve nada, el plugin no está instalado. Instálalo en Claude Code:"*
+
+```
+/plugin add-marketplace https://github.com/valentinlineiro/arch-protocol
+/plugin install arch-protocol@arch-protocol
+```
 
 The script:
-1. Creates `.arch/` (enables local LOG capture for this project)
-2. Verifies `~/.arch/retro.md` is reachable (confirms the stop hook is active)
-3. Reports how many global LOGs have accumulated
+1. Creates `.arch/` and adds it to `.gitignore`
+2. Appends `## ARCH Protocol` to `CLAUDE.md` (creates it if absent) — enables auto-activation on every future session in this project
+3. Verifies `~/.arch/retro.md` is reachable (confirms the stop hook is active)
+4. Reports how many global LOGs have accumulated
 
-After init: *"ARCH está configurado para este proyecto. ¿En qué trabajamos?"*
+After init: *"ARCH está configurado para este proyecto. Se activará automáticamente en cada sesión. ¿En qué trabajamos?"*
 
 ## Meta
 

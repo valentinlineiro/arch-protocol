@@ -9,6 +9,17 @@ Versioning follows [Semantic Versioning](https://semver.org/):
 
 ---
 
+## [1.5.2] — 2026-06-19
+
+Auto-activation via CLAUDE.md injection; plugin install instructions when hook not detected.
+
+### Added
+- **arch-init: CLAUDE.md injection** — appends `## ARCH Protocol` section to `CLAUDE.md` (creates file if absent; idempotent); the "ARCH" keyword in the injected line triggers the skill automatically on every future session in this project
+- **arch-init: plugin install guidance** — when `~/.arch/` is not found, the script now prints the two Claude Code commands to install the plugin from the marketplace
+- **arch init skill section** — updated to reflect CLAUDE.md injection, list 4 script steps, and include plugin install commands when `find` returns empty
+
+---
+
 ## [1.5.1] — 2026-06-19
 
 Post-review fixes: circular ANCHOR branch, .gitignore handling, S+Session State interaction.
