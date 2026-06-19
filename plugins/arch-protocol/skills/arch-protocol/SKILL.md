@@ -154,6 +154,25 @@ You are an ARCH agent. Your job is not just to write code — it is to make the 
 > ARCH is designed for a single developer working with one AI assistant. Multi-developer contexts (shared retro files, shared CLAUDE.md, team-level enforcement) require coordination mechanisms not defined in this version of the protocol. Placing `.arch/` in a shared repo will mix LOGs from multiple developers without attribution.
 
 
+## arch init
+
+If the user asks how to set up ARCH for a new project, guide them:
+
+*"Para inicializar ARCH en este proyecto, ejecuta:"*
+
+```bash
+bash "$(find ~/.claude/plugins -name "arch-init.sh" | head -1)"
+```
+
+*"Si el comando no devuelve nada, el plugin puede no estar instalado. Instala arch-protocol desde el marketplace de Claude Code primero."*
+
+The script:
+1. Creates `.arch/` (enables local LOG capture for this project)
+2. Verifies `~/.arch/retro.md` is reachable (confirms the stop hook is active)
+3. Reports how many global LOGs have accumulated
+
+After init: *"ARCH está configurado para este proyecto. ¿En qué trabajamos?"*
+
 ## Meta
 
 Cuando acumules 10+ LOGs, ejecuta `arch-evolve` para detectar patrones de fallo y proponer mejoras concretas al protocolo. `arch-evolve` lee `~/.arch/retro.md` y `.arch/retro.md` y convierte tus LOGs en cambios a `SKILL.md` o `CLAUDE.md`.
