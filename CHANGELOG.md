@@ -9,6 +9,17 @@ Versioning follows [Semantic Versioning](https://semver.org/):
 
 ---
 
+## [1.5.1] — 2026-06-19
+
+Post-review fixes: circular ANCHOR branch, .gitignore handling, S+Session State interaction.
+
+### Fixed
+- **Session State ANCHOR "Sí" branch** — was routing back into the ANCHOR step it was supposed to compress; now says "ANCHOR confirmado (hay commits nuevos), continúa con ATOM"
+- **arch-init.sh .gitignore handling** — script now adds `.arch/` to `.gitignore` (idempotent; creates the file if absent), preventing accidental commit of retro data to shared repos
+- **S task + Session State PULL interaction** — Session State section now explicitly notes that PULL compression does not apply to S tasks, since PULL is already folded into the `🎯 GATE+PULL (S):` block
+
+---
+
 ## [1.5.0] — 2026-06-19
 
 Friction reduction: session compression, ATOM quick mode, batch mode, arch-init script, directed LOG template, arch-evolve discovery.

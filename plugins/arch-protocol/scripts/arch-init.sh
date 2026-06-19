@@ -20,6 +20,19 @@ else
   echo "ℹ️  .arch/ ya existe — local LOG capture ya estaba habilitado"
 fi
 
+# Keep .arch/ out of version control
+if [ -f ".gitignore" ]; then
+  if ! grep -qxF ".arch/" .gitignore; then
+    echo ".arch/" >> .gitignore
+    echo "✅ .arch/ añadido a .gitignore"
+  else
+    echo "ℹ️  .arch/ ya está en .gitignore"
+  fi
+else
+  echo ".arch/" > .gitignore
+  echo "✅ .gitignore creado con .arch/"
+fi
+
 # Verify global retro file is reachable
 GLOBAL="$HOME/.arch/retro.md"
 if [ -f "$GLOBAL" ]; then

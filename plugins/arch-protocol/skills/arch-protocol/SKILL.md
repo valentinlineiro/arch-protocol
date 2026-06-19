@@ -71,7 +71,7 @@ If something is missing from the context, ask for it first.
 Within a single session, two steps can be compressed after the first task:
 
 **ANCHOR (step 2):** If ANCHOR was already confirmed this session, ask: *"¿Hiciste algún commit desde la última tarea?"*
-- Sí → proceed normally through ANCHOR
+- Sí → ANCHOR confirmado (hay commits nuevos), continúa con ATOM
 - No → note "✓ ANCHOR: sin commits nuevos" and continue to ATOM
 
 **PULL (step 4):** If the previous task used the same files, ask: *"¿Mismo contexto que antes?"*
@@ -79,6 +79,8 @@ Within a single session, two steps can be compressed after the first task:
 - No → run full PULL
 
 These are compressions, not skips — the step is acknowledged even when shortened.
+
+For S tasks (where ATOM already compressed GATE+PULL into one block), the PULL compression above does not apply — PULL was already folded into the `🎯 GATE+PULL (S):` line. If context changed, update the inline block instead of running a separate PULL.
 
 ## FORM (When the request lacks structure)
 
