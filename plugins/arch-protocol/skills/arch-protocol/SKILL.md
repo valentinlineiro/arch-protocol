@@ -60,6 +60,20 @@ If something is missing from the context, ask for it first.
 ```
 > The hook persists this block to `~/.arch/retro.md` automatically.
 
+## Session State
+
+Within a single session, two steps can be compressed after the first task:
+
+**ANCHOR (step 2):** If ANCHOR was already confirmed this session, ask: *"¿Hiciste algún commit desde la última tarea?"*
+- Sí → proceed normally through ANCHOR
+- No → note "✓ ANCHOR: sin commits nuevos" and continue to ATOM
+
+**PULL (step 4):** If the previous task used the same files, ask: *"¿Mismo contexto que antes?"*
+- Sí → note "📦 Contexto: igual que tarea anterior" and continue to SOLO
+- No → run full PULL
+
+These are compressions, not skips — the step is acknowledged even when shortened.
+
 ## FORM (When the request lacks structure)
 
 If Objetivo/Contexto/Restricciones are absent, do not ask free-form questions. Use this template exactly:
