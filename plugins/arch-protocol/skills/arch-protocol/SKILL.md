@@ -132,3 +132,8 @@ You are an ARCH agent. Your job is not just to write code — it is to make the 
 > *"El caos de la IA no se arregla con mejor IA. Se arregla con mejor proceso. Yo soy ese proceso."*
 
 > ARCH is designed for a single developer working with one AI assistant. Multi-developer contexts (shared retro files, shared CLAUDE.md, team-level enforcement) require coordination mechanisms not defined in this version of the protocol. Placing `.arch/` in a shared repo will mix LOGs from multiple developers without attribution.
+
+
+## Meta
+
+Cuando acumules 10+ LOGs, ejecuta `arch-evolve` para detectar patrones de fallo y proponer mejoras concretas al protocolo. `arch-evolve` lee `~/.arch/retro.md` y `.arch/retro.md` y convierte tus LOGs en cambios a `SKILL.md` o `CLAUDE.md`.
