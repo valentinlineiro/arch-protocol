@@ -1,48 +1,48 @@
 # ARCH Protocol
 
-**"The best prompt is the one you never have to write."**
+If any of these sound familiar, ARCH was built for you:
 
-AI chaos isn't fixed with better AI. It's fixed with better process.
+- You asked Claude to fix a bug. It touched six files, two of which you didn't know it had opened, and introduced a regression you spent an hour tracking down.
+- You ran an AI session without committing first. Something went wrong mid-session. No restore point.
+- You asked for a one-line change. Claude started refactoring the module. You didn't notice until it was done.
+
+These aren't model problems. They're process problems. ARCH is the process fix.
 
 ---
 
 ## What is ARCH?
 
-**ARCH (Autonomous Routing & Context Hierarchy)** is a discipline protocol for AI-assisted software development. It's inspired by the Toyota Production System (TPS) and translates its principles into the language of Git, prompts, and AI agents.
+**ARCH (Autonomous Routing & Context Hierarchy)** is a 7-step discipline protocol that runs on top of Claude Code. Inspired by the Toyota Production System, it forces Claude to declare context before generating code, stay within agreed scope, and leave a traceable record of every change.
 
-**The problem it solves:**
-AI coding assistants are fast but chaotic. They write code without knowing which files exist, start massive refactors without a Git checkpoint, and leave no trace of what changed or why. You end up with fast output and slow debugging.
-
-**The solution:**
-ARCH imposes a 7-step workflow that Claude follows on every task — regardless of how urgent it feels. It's not a better prompt. It's a protocol that makes any prompt work better.
+It's not a better prompt. It's a protocol that makes any prompt work better.
 
 ---
 
-## The 7 Steps of ARCH
+## The 7 Steps
 
-| Step | What it forces Claude to do |
+| Step | What it enforces |
 | :--- | :--- |
-| **GATE** | Claude must state in its own words the goal, the files, and the constraints **before writing any code**. If it doesn't understand, it asks. This is a hallucination filter. |
-| **ANCHOR** | Confirms a Git commit exists as a restore point before starting. No safety net, no change. |
-| **ATOM** | If the task is large (more than 5 files or 3 responsibilities), Claude suggests splitting it into smaller pieces (S/M/L sizing). |
-| **PULL** | Explicitly declares which files it will read before writing. No implicit context. |
-| **Generate** | Produces one logical change only. One commit per task. |
-| **EYES** | Reminds you to review the `git diff` and not trust the AI's summary. Final responsibility is yours. |
-| **LOG** | Closes every task with a 3-line kaizen retrospective: what worked, what failed, what you'd change. This builds a learning record that improves future tasks and gives you data to evolve your own process. |
+| **GATE** | Claude states the goal, files, and constraints **before writing any code**. If anything is missing, it asks. Hallucination filter. |
+| **ANCHOR** | Confirms a Git commit exists as a restore point. No safety net, no change. |
+| **ATOM** | If the task is large (>5 files or >3 responsibilities), Claude splits it before proceeding. |
+| **PULL** | Declares exactly which files it will read. No implicit context. |
+| **SOLO** | One logical change only. Scope creep stops here. |
+| **EYES** | Runs `git diff --name-only`, compares against what was declared in PULL, surfaces any divergence. Final review is yours. |
+| **LOG** | Closes every task with a 3-line retrospective: what the protocol caught, what failed, what you'd do differently. Feeds a learning record you can query with `arch-evolve`. |
 
 ---
 
 ## Why it works
 
-Most problems with AI-assisted development aren't model problems — they're **process problems**. The same mistakes repeat: lost context, no Git safety net, tasks too large to review, no institutional memory.
+Most AI-assisted development problems repeat the same pattern: Claude generates without grounding, changes propagate without a checkpoint, and nothing is recorded. The same mistakes compound session after session.
 
-ARCH borrows TPS's answer to the same problem in manufacturing: **stop the line before defects multiply**.
+ARCH borrows TPS's answer: **stop the line before defects multiply**.
 
-- **GATE** stops Claude from generating code it can't ground.
-- **ANCHOR** prevents unrecoverable changes.
-- **LOG** creates a daily record you can actually learn from.
+- **GATE** stops Claude from generating code it can't ground in actual files.
+- **ANCHOR** gives you a restore point before every change.
+- **LOG + arch-evolve** surfaces your own patterns after 5 sessions — "GATE caught 8 context gaps this month" — so you stop repeating the same mistakes.
 
-The protocol is deliberately resistant to pressure. When you say *"just write the fix, I have a demo in 2 hours"*, ARCH doesn't comply — it runs **GATE** first, because that's exactly the moment when skipping it causes the most damage.
+The protocol is deliberately resistant to pressure. When you say *"just write the fix, I have a demo in two hours,"* ARCH runs GATE first — because that's the moment skipping it causes the most damage.
 
 ---
 
@@ -50,46 +50,37 @@ The protocol is deliberately resistant to pressure. When you say *"just write th
 
 > *"I built ARCH because I was tired of spending more time debugging AI-generated code than writing it. After 6 months of daily use, I've reduced my context-loss errors by 80%. This is the protocol I wish I'd had from day one."*
 >
-> — Valentín Liñeiro, creator of ARCH.
+> — Valentín Liñeiro, creator of ARCH
 
 ---
 
 ## Installation
-
-Add the marketplace, then install the plugin:
 
 ```bash
 /plugin add-marketplace https://github.com/valentinlineiro/arch-protocol
 /plugin install arch-protocol@arch-protocol
 ```
 
-Then invoke it:
+Then invoke it in any session:
 
 ```
 "Let's work on X using ARCH"
 ```
 
-### What to expect after installation
+**Language:** ARCH runs in Spanish by default — the language switch signals protocol mode. To run in English, add this to your project's `CLAUDE.md`:
 
-Once installed, ARCH runs in the background. You'll notice Claude starts asking for context before writing code, and every task ends with a short retrospective. You don't have to think about ARCH — it just makes your AI assistant feel more… professional.
+```
+## ARCH Protocol
+lang: en
+```
 
----
-
-## The ARCH Manifesto
-
-> *"The best punch is the one never thrown.*
-> *The best prompt is the one never written.*
->
-> *ARCH is not a better prompt.*
-> *It's a protocol that makes any prompt work better."*
+**Project setup** (optional): run `arch init` in any project to create a local log directory and enable auto-activation.
 
 ---
 
 ## Community & contributions
 
-ARCH is open and community-driven.
-
-- **Try it for a week.**
+- Try it for a week — you need at least 5 sessions before `arch-evolve` shows you your own patterns.
 - If it saves you time, open an issue with your use case.
 - If it doesn't, open an issue telling me why. I'm iterating based on real feedback.
 

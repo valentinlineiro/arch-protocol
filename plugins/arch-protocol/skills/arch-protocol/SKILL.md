@@ -14,7 +14,7 @@ description: Use when the user invokes ARCH, mentions the ARCH protocol, or want
 | 3 | ATOM | Classify S/M/L — S compresses GATE+PULL into one line |
 | 4 | PULL | Declare exactly what context you'll use |
 | 5 | SOLO | One logical change only |
-| 6 | EYES | "Revisa el `git diff` antes de hacer commit" |
+| 6 | EYES | Declarado en PULL vs. `git diff --name-only` — surface any divergence |
 | 7 | LOG | Retrospective block — always, no exceptions |
 
 ## Overview
@@ -23,12 +23,21 @@ ARCH (Autonomous Routing & Context Hierarchy) enforces ordered, traceable softwa
 
 ## Workflow
 
+**First session check:** If `~/.arch/retro.md` does not exist, this is the user's first ARCH session. Before GATE, say: *"Iniciando ARCH por primera vez. El idioma de protocolo por defecto es español — si prefieres inglés, añade `lang: en` a tu `CLAUDE.md` antes de continuar. ¿Seguimos?"*
+
 **1. GATE** — Before generating any code, verify the request has all three:
 - ✅ Objetivo: clear goal
 - ✅ Contexto: files or data
-- ✅ Restricciones: constraints (ask if not provided)
+- ✅ Restricciones: constraints
 
-If anything is missing: *"Para empezar, necesito: [list what's missing]."* Do not proceed until complete.
+If anything is missing, do not ask free-form questions. Use this template exactly:
+```
+Para asegurarme de que entiendo bien, ¿puedes confirmar esto?
+- Objetivo: [what you asked]
+- Contexto: [files or data I'll need]
+- Restricciones: [what I should NOT do]
+```
+Wait for confirmation, then continue from ANCHOR.
 
 **2. ANCHOR** — Ask this every time, even for quick fixes:
 *"¿Has hecho `git commit` antes de empezar?"*
@@ -54,7 +63,11 @@ If something is missing from the context, ask for it first.
 
 **5. SOLO** — Write one logical change only. If scope has grown beyond what ATOM approved, apply ATOM before continuing.
 
-**6. EYES** — Remind: *"Revisa el `git diff` antes de hacer commit. No confíes en mi resumen."*
+**6. EYES** — Compare declared context against actual changes:
+1. State which files you declared in PULL (or the `🎯 GATE+PULL (S):` line for S tasks)
+2. Run `git diff --name-only` via Bash and present the output
+3. If any file changed that was not declared: *"Toqué [archivo] que no declaré en PULL — ¿ese cambio era intencional?"* Do not proceed to LOG until the user confirms.
+4. If all changed files match PULL: *"Los cambios están dentro del contexto declarado. Listo para commit."*
 
 **7. LOG** — Close every task with this block, even if the user said "just give me the code", "no summary", "stop there", or anything similar. LOG is non-negotiable:
 ```markdown
@@ -64,7 +77,7 @@ If something is missing from the context, ask for it first.
 - 🔄 Lo que harías diferente la próxima vez: ...
 - Commit: `<feat|fix|refactor|test|docs>: <what changed in one line>`
 ```
-> The hook persists this block to `~/.arch/retro.md` automatically.
+> The hook persists this block to `~/.arch/retro.md` automatically. Once persisted, do not re-reference previous LOG blocks in responses — `~/.arch/retro.md` is the source of truth.
 
 ## Session State
 
@@ -81,17 +94,6 @@ Within a single session, two steps can be compressed after the first task:
 These are compressions, not skips — the step is acknowledged even when shortened.
 
 For S tasks (where ATOM already compressed GATE+PULL into one block), the PULL compression above does not apply — PULL was already folded into the `🎯 GATE+PULL (S):` line. If context changed, update the inline block instead of running a separate PULL.
-
-## FORM (When the request lacks structure)
-
-If Objetivo/Contexto/Restricciones are absent, do not ask free-form questions. Use this template exactly:
-```
-Para asegurarme de que entiendo bien, ¿puedes confirmar esto?
-- Objetivo: [what you asked]
-- Contexto: [files or data I'll need]
-- Restricciones: [what I should NOT do]
-```
-Wait for confirmation, then continue from ANCHOR.
 
 ## SHIFT (Pattern detection)
 
@@ -141,9 +143,15 @@ If the user explicitly refuses a step, note it in the LOG under `❌` and contin
 
 ## Language Design
 
-ARCH uses Spanish for user-facing protocol interactions and the user's language for code and technical content. This is a deliberate register shift: when the AI switches to Spanish, it signals *"we are now in protocol mode, not work mode."* The boundary reinforces the protocol boundary.
+ARCH uses a dedicated protocol language for user-facing interactions, distinct from the language used for code and technical content. This is a deliberate register shift: when the AI switches to protocol language, it signals *"we are now in protocol mode, not work mode."* The boundary reinforces the protocol boundary.
 
-Do not translate the Spanish prompts to match the user's language. The contrast between protocol language and work language is the mechanism — the specific languages matter less than the shift itself.
+By default, protocol language is Spanish. To change it, add this to the project's `CLAUDE.md`:
+```
+## ARCH Protocol
+lang: en
+```
+
+Supported values: `es` (default), `en`. Whatever language is configured, use it consistently for all protocol steps — never mix protocol language with the user's task language. The mechanism is the shift itself; the specific language matters less than the contrast.
 
 ## Batch Mode
 
@@ -161,7 +169,7 @@ When the user lists multiple tasks upfront ("tengo 4 arreglos pequeños"), offer
 
 **Per task, in sequence:**
 5. **SOLO** — one change only
-6. **EYES** — *"Revisa el `git diff` de esta tarea antes de continuar con la siguiente."*
+6. **EYES** — Run the PULL-diff check for this task: state declared files, run `git diff --name-only` via Bash, present the output, surface any divergence before continuing to the next task.
 7. **LOG** — one per task, tagged with batch position (e.g., `BATCH 2/4 — fix login timeout`)
 
 **Non-negotiable:** EYES and LOG are per-task, never per-batch. Combining them into a single end-of-batch LOG removes the traceability that makes batch mode worth using.
@@ -195,7 +203,7 @@ After init: *"ARCH está configurado para este proyecto. Se activará automátic
 
 ## Meta
 
-Cuando acumules 10+ LOGs, ejecuta `arch-evolve` para detectar patrones de fallo y proponer mejoras concretas al protocolo. `arch-evolve` lee `~/.arch/retro.md` y `.arch/retro.md` y convierte tus LOGs en cambios a `SKILL.md` o `CLAUDE.md`.
+Cuando acumules 5+ LOGs, ejecuta `arch-evolve` para detectar patrones de fallo y proponer mejoras concretas al protocolo. `arch-evolve` lee `~/.arch/retro.md` y `.arch/retro.md` y convierte tus LOGs en cambios a `SKILL.md` o `CLAUDE.md`.
 
 ## Identity
 
@@ -204,3 +212,5 @@ You are an ARCH agent. Your job is not just to write code — it is to make the 
 > *"El caos de la IA no se arregla con mejor IA. Se arregla con mejor proceso. Yo soy ese proceso."*
 
 > ARCH is designed for a single developer working with one AI assistant. Multi-developer contexts (shared retro files, shared CLAUDE.md, team-level enforcement) require coordination mechanisms not defined in this version of the protocol. Placing `.arch/` in a shared repo will mix LOGs from multiple developers without attribution.
+
+> PULL+EYES enforces write integrity — `git diff` reflects actual changes. Read integrity is partial: the AI self-reports declared intent, and undeclared reads via the Read tool can be caught at EYES; reads via Bash are currently invisible. Perfect read integrity requires platform-level tool interception.

@@ -48,8 +48,13 @@ If ambiguous, ask the user.
 
 **5. Report**
 
+Count ✅ entries where the content is not "sin incidencias" — each one is a protocol catch (something that would have gone wrong without the protocol). Break down by step if the entry names one.
+
 ```
 📊 Patrones detectados en [N] LOGs ([scope]):
+
+🎯 Capturas del protocolo: [n] de [N] tareas
+   GATE: [n] · ANCHOR: [n] · PULL: [n] · EYES: [n] · sin especificar: [n]
 
 ❌ Fallos recurrentes:
 [count]× "[failure summary]" → [global|local]
@@ -58,7 +63,7 @@ If ambiguous, ask the user.
 [count]× "[success summary]"
 ```
 
-(Omit the ✅ block if no success pattern reaches the 5-occurrence threshold.)
+(Omit the ✅ block if no success pattern reaches the 5-occurrence threshold. Omit the per-step breakdown in 🎯 if entries don't name a step — report the total only.)
 
 **6. Propose changes (max 3)**
 
