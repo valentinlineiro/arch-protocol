@@ -11,7 +11,7 @@ description: Use when the user invokes ARCH, mentions the ARCH protocol, or want
 |------|------|-----------|
 | 1 | GATE | Objetivo + Contexto + Restricciones — all three, or stop |
 | 2 | ANCHOR | "¿Has hecho `git commit`?" — every time |
-| 3 | ATOM | >5 files or >3 responsibilities → split first |
+| 3 | ATOM | Classify S/M/L — S compresses GATE+PULL into one line |
 | 4 | PULL | Declare exactly what context you'll use |
 | 5 | SOLO | One logical change only |
 | 6 | EYES | "Revisa el `git diff` antes de hacer commit" |
@@ -34,9 +34,15 @@ If anything is missing: *"Para empezar, necesito: [list what's missing]."* Do no
 *"¿Has hecho `git commit` antes de empezar?"*
 If no → suggest it. If yes → proceed.
 
-**3. ATOM** — If the task touches >5 files or has >3 distinct responsibilities, respond:
-*"Esta tarea es grande (L). Te sugiero dividirla en 2 o 3 tareas más pequeñas (S/M). ¿Cómo prefieres proceder?"*
-Do not generate code until scope is agreed.
+**3. ATOM** — Classify task scope before proceeding:
+
+| Size | Criteria | Action |
+|------|----------|--------|
+| **L** | >5 files or >3 responsibilities | *"Esta tarea es grande (L). Divídela en 2–3 tareas S/M primero. ¿Cómo prefieres proceder?"* Do not generate code until scope is agreed. |
+| **M** | 2–5 files or 2–3 responsibilities | Run all 7 steps at full length. |
+| **S** | ≤1 file and 1 responsibility | Run all 7 steps, but compress GATE + PULL into one block: `🎯 GATE+PULL (S): [goal in one sentence] · [file] · [constraint if any]` |
+
+For S tasks, ANCHOR, SOLO, EYES, and LOG always run at full length. The compression is in presentation, not in discipline.
 
 **4. PULL** — Declare exactly what context you will use, in this exact format:
 ```
