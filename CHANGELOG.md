@@ -9,6 +9,22 @@ Versioning follows [Semantic Versioning](https://semver.org/):
 
 ---
 
+## [1.3.0] — 2026-06-19
+
+Skill polish: naming consistency, tighter LOG, and arch-evolve fixes.
+
+### Changed
+- **Step 5 renamed** from `Generate` to `SOLO` — aligns the step header with the principle it enforces
+- **Step 5 threshold** no longer repeats `>5 files`; it now defers to ATOM ("if scope has grown beyond what ATOM approved")
+- **Commit message moved into LOG** — the `💾 Commit:` line is now a required slot inside the LOG block; the standalone `## Suggested commit message` section is removed
+- **LOG persistence note** added below the LOG template as a reminder that the hook auto-captures to `~/.arch/retro.md`
+- **FORM restart** corrected from "restart from GATE" to "continue from ANCHOR" — FORM already captures the GATE data, so the next step is ANCHOR
+- **Overview** tightened by removing the redundant "no skipping steps" clause
+- **`arch-evolve` step 4** wording changed from "determine scope automatically" to "classify scope using these signals"
+- **`arch-evolve` step 7** path corrected from `~/.claude/skills/arch-protocol/SKILL.md` to the canonical repo path `plugins/arch-protocol/skills/arch-protocol/SKILL.md`
+
+---
+
 ## [1.2.0] — 2026-06-18
 
 Hybrid global/local retro architecture for the improvement cycle.

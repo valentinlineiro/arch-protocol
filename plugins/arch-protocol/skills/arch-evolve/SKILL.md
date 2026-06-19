@@ -37,7 +37,7 @@ Extract all `❌` lines. Group by semantic similarity. Count occurrences. Only s
 
 **4. Classify each pattern**
 
-For each pattern, determine scope automatically:
+For each pattern, classify scope using these signals:
 - **Global** → mentions forgetting a protocol step (GATE, ANCHOR, ATOM, LOG) or a universal habit
 - **Local** → mentions a specific technology, framework, API, or domain concept
 
@@ -74,7 +74,7 @@ For **local** patterns, propose an addition to `CLAUDE.md` or `MEMORY.md`:
 *"¿Aplicamos alguno? Di el número o 'ninguno'."*
 
 If approved:
-- Global: edit the installed skill at `~/.claude/skills/arch-protocol/SKILL.md` and remind the user to also update the repo and bump the patch version
+- Global: edit the skill in the repo at `plugins/arch-protocol/skills/arch-protocol/SKILL.md` and remind the user to bump the patch version and push
 - Local: edit `CLAUDE.md` or `MEMORY.md` in the current project
 
 If rejected: note the reason and suggest revisiting after more LOGs accumulate.

@@ -7,7 +7,7 @@ description: Use when the user invokes ARCH, mentions the ARCH protocol, or want
 
 ## Overview
 
-ARCH (Autonomous Routing & Context Hierarchy) enforces ordered, traceable software development. Every task follows the same 7-step sequence — no exceptions, no skipping steps, no matter how simple the request or how urgent the user says it is.
+ARCH (Autonomous Routing & Context Hierarchy) enforces ordered, traceable software development. Every task follows the same 7-step sequence — no exceptions, no matter how simple the request or how urgent the user says it is.
 
 ## Workflow
 
@@ -34,7 +34,7 @@ Do not generate code until scope is agreed.
 ```
 If something is missing from the context, ask for it first.
 
-**5. Generate** — Write one logical change only (SOLO). If the change touches >5 files, suggest splitting before continuing.
+**5. SOLO** — Write one logical change only. If scope has grown beyond what ATOM approved, apply ATOM before continuing.
 
 **6. EYES** — Remind: *"Revisa el `git diff` antes de hacer commit. No confíes en mi resumen."*
 
@@ -44,7 +44,9 @@ If something is missing from the context, ask for it first.
 - ✅ Lo que funcionó bien: ...
 - ❌ Lo que falló: ...
 - 🔄 Lo que harías diferente la próxima vez: ...
+- 💾 Commit: `<feat|fix|refactor|test|docs>: <what changed in one line>`
 ```
+> The hook persists this block to `~/.arch/retro.md` automatically.
 
 ## FORM (When the request lacks structure)
 
@@ -55,14 +57,7 @@ Para asegurarme de que entiendo bien, ¿puedes confirmar esto?
 - Contexto: [files or data I'll need]
 - Restricciones: [what I should NOT do]
 ```
-Wait for confirmation, then restart from GATE.
-
-## Suggested commit message
-
-Include one at the end of every completed task:
-```
-<feat|fix|refactor|test|docs>: <what changed in one line>
-```
+Wait for confirmation, then continue from ANCHOR.
 
 ## SHIFT (Pattern detection)
 
