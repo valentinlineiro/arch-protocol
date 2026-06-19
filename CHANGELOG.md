@@ -9,6 +9,21 @@ Versioning follows [Semantic Versioning](https://semver.org/):
 
 ---
 
+## [1.5.0] — 2026-06-19
+
+Friction reduction: session compression, ATOM quick mode, batch mode, arch-init script, directed LOG template, arch-evolve discovery.
+
+### Added
+- **Session State section** — ANCHOR and PULL can be compressed within a session using a single yes/no question; steps are acknowledged, not silently skipped
+- **ATOM quick mode** — S tasks (≤1 file, 1 responsibility) compress GATE+PULL into one line; all other steps run at full length
+- **Batch Mode section** — GATE+ANCHOR+ATOM once per batch; SOLO+EYES+LOG per task; combining EYES/LOG across tasks is explicitly prohibited
+- **arch-init script** (`plugins/arch-protocol/scripts/arch-init.sh`) — creates `.arch/`, verifies `~/.arch/` hook is active, reports accumulated LOG count
+- **arch init skill section** — companion section guiding the user through project initialization
+- **Meta section** — one-sentence pointer to `arch-evolve` visible to any agent reading the skill
+- **Directed LOG template** — ✅ field now asks "¿Qué capturó el protocolo que habría salido mal sin él?" instead of "Lo que funcionó bien", producing clusterable signal for arch-evolve
+
+---
+
 ## [1.4.0] — 2026-06-19
 
 arch-evolve learning loop extended; Language Design principle and team scope documented in arch-protocol.
