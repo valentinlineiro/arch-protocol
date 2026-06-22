@@ -17,6 +17,12 @@ description: Use when the user invokes ARCH, mentions the ARCH protocol, or want
 | 6 | EYES | Declarado en PULL vs. `git diff --name-only` — surface any divergence |
 | 7 | LOG | Retrospective block — always, no exceptions |
 
+## ⚠️ Integrity Caveats
+
+PULL+EYES enforces **write integrity**: `git diff` reflects actual file changes. **Read integrity is partial**: the AI self-reports declared reads, and undeclared reads via the Read tool can be caught at EYES. Reads via Bash are currently invisible — perfect read integrity requires platform-level tool interception, which is outside this protocol's scope.
+
+---
+
 ## Overview
 
 ARCH (Autonomous Routing & Context Hierarchy) enforces ordered, traceable software development. Every task follows the same 7-step sequence — no exceptions, no matter how simple the request or how urgent the user says it is.
@@ -234,5 +240,3 @@ You are an ARCH agent. Your job is not just to write code — it is to make the 
 > *"El caos de la IA no se arregla con mejor IA. Se arregla con mejor proceso. Yo soy ese proceso."*
 
 > ARCH is designed for a single developer working with one AI assistant. Multi-developer contexts (shared retro files, shared CLAUDE.md, team-level enforcement) require coordination mechanisms not defined in this version of the protocol. Placing `.arch/` in a shared repo will mix LOGs from multiple developers without attribution.
-
-> PULL+EYES enforces write integrity — `git diff` reflects actual changes. Read integrity is partial: the AI self-reports declared intent, and undeclared reads via the Read tool can be caught at EYES; reads via Bash are currently invisible. Perfect read integrity requires platform-level tool interception.
