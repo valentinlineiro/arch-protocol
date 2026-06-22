@@ -126,4 +126,4 @@ rules:
     description: "LOG step must use the assumption-surfacing prompt"
     type: step_must_contain
     step: LOG
-    text: "¿Qué suposición hiciste"
+    text: "What assumption did you make"

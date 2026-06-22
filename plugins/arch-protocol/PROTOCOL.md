@@ -1,10 +1,3 @@
----
-name: arch-protocol
-description: Use when the user invokes ARCH, mentions the ARCH protocol, or wants to apply Toyota Production System discipline to a software development task
----
-
-<!-- Claude Code adapter. Source of truth: PROTOCOL.md -->
-
 # ARCH Protocol
 
 ## Quick Reference
