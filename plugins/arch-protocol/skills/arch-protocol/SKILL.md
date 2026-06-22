@@ -87,7 +87,7 @@ Within a single session, two steps can be compressed after the first task:
 
 **ANCHOR (step 2):** If ANCHOR was already confirmed this session, run `git status --short` again.
 - Empty output → note "✓ ANCHOR: sin cambios nuevos" and continue to ATOM
-- Non-empty output → *"Hay cambios sin commitear desde la última tarea — [files]. ¿Commiteamos antes de seguir?"*
+- Non-empty output → *"Hay cambios sin commitear desde la última tarea — [files]. Hacé commit antes de continuar — o confirmá explícitamente si querés proceder igual."*
 
 **PULL (step 4):** If the previous task used the same files, ask: *"¿Mismo contexto que antes?"*
 - Sí → note "📦 Contexto: igual que tarea anterior" and continue to SOLO
@@ -116,7 +116,7 @@ If the user explicitly refuses a step, note it in the LOG under `❌` and contin
 
 | User says | Response |
 |-----------|----------|
-| "Skip ANCHOR, I already committed" | Run `git status --short` anyway. If clean: "Confirmado, working tree limpio. Seguimos con ATOM." If not clean: "git status muestra cambios sin commitear — hacé commit primero." |
+| "Skip ANCHOR, I already committed" | Run `git status --short` anyway. If clean: "Confirmado, working tree limpio. Seguimos con ATOM." If not clean: "git status muestra cambios sin commitear en [files]. Hacé commit antes de continuar — o confirmá explícitamente si querés proceder igual." |
 | "No GATE, just write the code" | "Necesito Objetivo + Contexto + Restricciones primero — dame 30 segundos." |
 | "I don't care about LOG" | Add LOG anyway. Note in `❌`: "Usuario pidió omitir LOG." |
 | "The protocol is too slow" | "Es más lento saltárselo cuando algo sale mal. ¿Qué paso te parece innecesario?" |
