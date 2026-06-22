@@ -63,10 +63,20 @@ For S tasks, ANCHOR, SOLO, EYES, and LOG always run at full length. The compress
 ```
 If something is missing from the context, ask for it first.
 
-**5. SOLO** — Write one logical change only. If scope has grown beyond what ATOM approved, apply ATOM before continuing.
+**5. SOLO** — Before writing any code, declare the single logical change in this format:
+
+```
+🎯 SOLO: [one sentence — what will change and where]
+```
+
+Wait for user confirmation. Do not generate code until confirmed.
+
+If scope has grown beyond what ATOM approved: apply ATOM before continuing — do not silently expand scope.
+
+This declaration becomes the reference for EYES: if the diff touches anything not described here, surface it.
 
 **6. EYES** — Compare declared context against actual changes:
-1. State which files you declared in PULL (or the `🎯 GATE+PULL (S):` line for S tasks)
+1. State which files you declared in PULL and the change you declared in SOLO (or the `🎯 GATE+PULL (S):` line for S tasks)
 2. Run `git diff --name-only` via Bash and present the output
 3. If any file changed that was not declared: *"Toqué [archivo] que no declaré en PULL — ¿ese cambio era intencional?"* Do not proceed to LOG until the user confirms.
 4. If all changed files match PULL: *"Los cambios están dentro del contexto declarado. Listo para commit."*
@@ -170,7 +180,7 @@ When the user lists multiple tasks upfront ("tengo 4 arreglos pequeños"), offer
 4. **ATOM** — classify each task individually; **extract any L-sized task before starting the batch**
 
 **Per task, in sequence:**
-5. **SOLO** — one change only
+5. **SOLO** — Declare the single change for this task: `🎯 SOLO: [what changes and where]`. Wait for confirmation before writing code.
 6. **EYES** — Run the PULL-diff check for this task: state declared files, run `git diff --name-only` via Bash, present the output, surface any divergence before continuing to the next task.
 7. **LOG** — one per task, tagged with batch position (e.g., `BATCH 2/4 — fix login timeout`)
 
