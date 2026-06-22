@@ -25,7 +25,7 @@ Local capture is opt-in: run `mkdir .arch` in a project to start collecting loca
 - If called with `--global`: use `~/.arch/retro.md` → propose changes to `SKILL.md`
 - If called with `--local`: use `./.arch/retro.md` → propose changes to `CLAUDE.md` / `MEMORY.md`
 - If called with no args: check which files exist and ask:
-  *"Tengo datos en [global/local/ambos]. ¿Quieres analizar el skill global (SKILL.md) o el contexto local (CLAUDE.md)?"*
+  *"I have data in [global/local/both]. Analyze the global skill (SKILL.md) or the local context (CLAUDE.md)?"*
 
 **2. Check data**
 
@@ -48,18 +48,18 @@ If ambiguous, ask the user.
 
 **5. Report**
 
-Count ✅ entries where the content is not "sin incidencias" — each one is a protocol catch (something that would have gone wrong without the protocol). Break down by step if the entry names one.
+Count ✅ entries where the content is not "no incidents" — each one is a protocol catch (something that would have gone wrong without the protocol). Break down by step if the entry names one.
 
 ```
-📊 Patrones detectados en [N] LOGs ([scope]):
+📊 Patterns detected in [N] LOGs ([scope]):
 
-🎯 Capturas del protocolo: [n] de [N] tareas
-   GATE: [n] · ANCHOR: [n] · PULL: [n] · EYES: [n] · sin especificar: [n]
+🎯 Protocol catches: [n] of [N] tasks
+   GATE: [n] · ANCHOR: [n] · PULL: [n] · EYES: [n] · unspecified: [n]
 
-❌ Fallos recurrentes:
+❌ Recurring failures:
 [count]× "[failure summary]" → [global|local]
 
-✅ Lo que funciona bien (5+ menciones):
+✅ What's working well (5+ mentions):
 [count]× "[success summary]"
 ```
 
@@ -69,36 +69,36 @@ Count ✅ entries where the content is not "sin incidencias" — each one is a p
 
 For **global** patterns, propose a diff to `SKILL.md`:
 ```
-📝 Propuesta global para SKILL.md:
-[+] Añadir a Rationalization Table:
+📝 Global proposal for SKILL.md:
+[+] Add to Rationalization Table:
 | "[pattern]" | [counter] |
 ```
 
 For **local** patterns, propose an addition to `CLAUDE.md` or `MEMORY.md`:
 ```
-📝 Propuesta local para CLAUDE.md:
-[+] Añadir sección:
+📝 Local proposal for CLAUDE.md:
+[+] Add section:
 ## [Topic]
 [specific context or rule for this project]
 ```
 
 For **✅ success patterns** (5+ occurrences), propose a reinforcement note — optional and does not count against the 3-proposal limit:
 ```
-📝 Propuesta de refuerzo:
-[count]× "[success summary]" — este paso funciona bien de forma consistente.
-¿Quieres añadir un ejemplo concreto a la documentación del skill?
+📝 Reinforcement proposal:
+[count]× "[success summary]" — this step is consistently working well.
+Want to add a concrete example to the skill documentation?
 ```
 
 For **stale rules** — rules in SKILL.md or CLAUDE.md absent from ❌ and ✅ lines across the last 20+ consecutive LOG entries — propose archiving (not deletion). Surface this separately, after the numbered proposals:
 ```
-📦 Propuesta de archivo:
-La regla "[rule text]" no aparece en los últimos [N] LOGs.
-¿La movemos a ## Reglas Archivadas? (no se elimina — se puede restaurar en cualquier momento)
+📦 Archive proposal:
+The rule "[rule text]" hasn't appeared in the last [N] LOGs.
+Move it to ## Archived Rules? (not deleted — can be restored at any time)
 ```
 
 **7. Ask for approval**
 
-*"¿Aplicamos alguno? Di el número o 'ninguno'."*
+*"Apply any of these? Give the number or 'none'."*
 
 If approved:
 - Global: edit the skill in the repo at `plugins/arch-protocol/skills/arch-protocol/SKILL.md` and remind the user to bump the patch version and push
@@ -116,4 +116,4 @@ If rejected: note the reason and suggest revisiting after more LOGs accumulate.
 - Suggested cadence: run after every 10 new LOG entries. A simple habit: run at the end of each sprint or after any session where repeated ❌ entries appeared.
 - Archive proposals have a higher bar than additions: 20+ consecutive LOGs with no hits. A rule that appeared once months ago is not stale.
 - Archive means move to `## Archived Rules` at the bottom of the target file — never hard delete. The user can restore at any time.
-- Maximum 1 archive proposal per run, surfaced separately after the numbered proposals with *"Además, tengo una propuesta de archivo. ¿Quieres verla?"*
+- Maximum 1 archive proposal per run, surfaced separately after the numbered proposals with *"I also have an archive proposal. Want to see it?"*
