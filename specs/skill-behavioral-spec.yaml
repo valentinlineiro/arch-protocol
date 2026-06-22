@@ -1,0 +1,120 @@
+version: "1.7.1"
+description: >
+  Behavioral integrity spec for ARCH SKILL.md.
+  Rules encode invariants whose violation would silently break the protocol.
+  Covers: mechanical commands, cross-step references, orphan prevention.
+  Does NOT encode phrasing preferences or template wording — those change
+  too often and CI noise would undermine trust in the spec.
+
+skill_path: plugins/arch-protocol/skills/arch-protocol/SKILL.md
+
+rules:
+
+  # ── ANCHOR: mechanical check ──────────────────────────────────────────────
+
+  - id: anchor-uses-git-status-short
+    description: "ANCHOR must use 'git status --short', not bare 'git status'"
+    type: step_must_contain
+    step: ANCHOR
+    text: "git status --short"
+
+  - id: anchor-no-bare-git-status
+    description: "Backtick-enclosed 'git status' without --short must never appear as a command"
+    type: global_must_not_match
+    pattern: "`git status(?! --short)`"
+    note: >
+      git status --short is the only allowed command form. Checks backtick-enclosed
+      commands only — prose references like 'git status shows changes' are allowed.
+
+  - id: anchor-captures-hash-main
+    description: "ANCHOR step must run git rev-parse HEAD to capture hash"
+    type: step_must_contain
+    step: ANCHOR
+    text: "git rev-parse HEAD"
+
+  - id: anchor-notes-anchor-hash-main
+    description: "ANCHOR step must note ANCHOR_HASH for use by EYES"
+    type: step_must_contain
+    step: ANCHOR
+    text: "ANCHOR_HASH"
+
+  # ── ANCHOR: consistency across Session State and PUSHBACK ─────────────────
+
+  - id: anchor-session-state-captures-hash
+    description: "Session State ANCHOR compression must also update ANCHOR_HASH"
+    type: section_must_contain
+    section: "Session State"
+    text: "git rev-parse HEAD"
+
+  - id: anchor-session-state-notes-hash
+    description: "Session State must reference ANCHOR_HASH"
+    type: section_must_contain
+    section: "Session State"
+    text: "ANCHOR_HASH"
+
+  - id: anchor-pushback-still-mechanical
+    description: "PUSHBACK ANCHOR row must run git status --short (not trust user report)"
+    type: section_must_contain
+    section: "PUSHBACK"
+    text: "git status --short"
+
+  - id: anchor-wording-consistency
+    description: >
+      The key hash-capture phrase must appear in both ANCHOR step and
+      Session State — verifies identical mechanical behavior in both contexts
+    type: cross_section_phrase_match
+    phrase: "git rev-parse HEAD"
+    sections:
+      - step: ANCHOR
+      - section: "Session State"
+
+  # ── EYES: mechanical diff from ANCHOR_HASH ────────────────────────────────
+
+  - id: eyes-diffs-from-anchor-hash
+    description: "EYES must use ANCHOR_HASH for git diff (not HEAD~N or bare HEAD)"
+    type: step_must_contain
+    step: EYES
+    text: "ANCHOR_HASH"
+
+  - id: eyes-no-self-report-question
+    description: "EYES must not ask the user about intermediate commits"
+    type: step_must_not_contain
+    step: EYES
+    text: "¿Hiciste algún commit"
+
+  - id: batch-eyes-uses-anchor-hash
+    description: "Batch Mode EYES must also diff from ANCHOR_HASH"
+    type: section_must_contain
+    section: "Batch Mode"
+    text: "ANCHOR_HASH"
+
+  - id: quick-reference-eyes-anchor-hash
+    description: "Quick Reference EYES entry must reflect ANCHOR_HASH"
+    type: section_must_contain
+    section: "Quick Reference"
+    text: "ANCHOR_HASH"
+
+  # ── Orphan prevention ─────────────────────────────────────────────────────
+
+  - id: no-orphan-head-tilde-n
+    description: "HEAD~N must not appear — replaced by git diff ANCHOR_HASH"
+    type: global_must_not_contain
+    text: "HEAD~N"
+
+  - id: no-orphan-self-report-question
+    description: "Old self-reporting commit question must not appear anywhere"
+    type: global_must_not_contain
+    text: "¿Hiciste algún commit"
+
+  - id: no-orphan-log-prompt
+    description: "Old LOG prompt '¿Qué capturó el protocolo' must not appear"
+    type: global_must_not_contain
+    text: "¿Qué capturó el protocolo"
+
+  # ── LOG: assumption prompt ────────────────────────────────────────────────
+
+  - id: log-uses-assumption-prompt
+    description: "LOG step must use the assumption-surfacing prompt"
+    type: step_must_contain
+    step: LOG
+    text: "¿Qué suposición hiciste"
