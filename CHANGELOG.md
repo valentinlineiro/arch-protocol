@@ -9,6 +9,29 @@ Versioning follows [Semantic Versioning](https://semver.org/):
 
 ---
 
+## [1.8.0] — 2026-06-22
+
+Output compression, SHIFT persistence, enforcement hooks, and full English translation.
+
+### Added
+- **S-task output compression** — GATE+PULL+SOLO fold into one `🎯 GATE+PULL (S): ... → [what will change]` line. EYES compresses to `✓ EYES (S): [filename] only, matches SOLO.` on a clean diff. LOG compresses to `📝 LOG (S): no incidents · commit: ...` when no incident occurred. Full ceremony materializes only on exception. Confirmation wait removed for S-task SOLO — the `→` clause is the declaration; EYES is the enforcement.
+- **SHIFT persistence** — omission counters now persist across sessions in `~/.arch/shift.json`. Controlled vocabulary of 6 keys (`skip_gate`, `skip_anchor`, `skip_solo`, `skip_log`, `undeclared_read`, `scope_creep`) enables reliable cross-session pattern matching. `skip_solo` scoped to M/L tasks only — S tasks have no confirmation wait by design.
+- **arch-evolve session trigger** — at the first GATE of each session, if `(log_count − log_count_at_last_evolve) ≥ 5`, surfaces a non-blocking reminder to run `arch-evolve`. No gate, no question — ambient information only.
+- **Enforcement hooks** — `UserPromptSubmit` hook writes `~/.arch/anchor_state` (dirty status + HEAD hash) on every prompt, eliminating first-task ANCHOR ceremony. `PreToolUse` hook on Write/Edit blocks if `~/.arch/solo_declared_<hash>` is absent, enforcing SOLO before any file write. Hash-prefixed filename makes validity scope self-contained — no cleanup required.
+- **PROTOCOL.md** — platform-agnostic spec extracted from SKILL.md at `plugins/arch-protocol/PROTOCOL.md`. Claude Code SKILL.md is now the adapter; PROTOCOL.md is the source for future platform ports.
+
+### Changed
+- **Full English translation** — all user-facing protocol strings in SKILL.md, arch-evolve/SKILL.md, and arch-init.sh converted to English. Language Design section removed. Spanish was a secondary register-shift signal; the format tokens (`🎯`, `📦`, `✓`, `📝`) and ALL-CAPS step names carry the signal alone.
+- **Session State ANCHOR write-back** — re-anchor after each task now writes `hash=` back to `~/.arch/anchor_state`, keeping the PreToolUse hook's hash current across multi-task sessions.
+- **Commentary cuts** — Overview, Red Flags, Identity sections removed. Rationalization Table trimmed from 6 to 4 rows. Net: ~18 lines removed without losing any enforcement.
+
+### Fixed
+- **Batch Mode SOLO** — S tasks in a batch now absorb SOLO into the `→` clause with no confirmation wait, consistent with single-task flow.
+- **Evolve check phrasing** — changed from a question (`¿Querés ejecutarlo?`) to a statement (`run arch-evolve whenever you're ready`), removing an implied blocking wait.
+- **Bare `git status` in prose** — two references in PUSHBACK table and SHIFT vocabulary corrected to `git status --short` to pass the integrity validator.
+
+---
+
 ## [1.5.2] — 2026-06-19
 
 Auto-activation via CLAUDE.md injection; plugin install instructions when hook not detected.
