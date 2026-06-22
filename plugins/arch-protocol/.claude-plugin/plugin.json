@@ -1,6 +1,6 @@
 {
   "name": "arch-protocol",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "description": "ARCH protocol skill — structured human+AI software development based on Toyota Production System principles. Enforces atomic tasks, pre-flight validation, context declaration, and kaizen retrospectives.",
   "author": {
     "name": "Valentín Liñeiro"
