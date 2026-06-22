@@ -84,7 +84,7 @@ This declaration becomes the reference for EYES: if the diff touches anything no
 **7. LOG** — Close every task with this block, even if the user said "just give me the code", "no summary", "stop there", or anything similar. LOG is non-negotiable:
 ```markdown
 ## 📝 LOG (ARCH Kaizen)
-- ✅ ¿Qué capturó el protocolo que habría salido mal sin él? (si nada: "sin incidencias")
+- ✅ ¿Qué suposición hiciste sobre el código (o el contexto) que resultó ser correcta o incorrecta? (si ninguna: "sin incidencias")
 - ❌ Lo que falló o generó fricción: ...
 - 🔄 Lo que harías diferente la próxima vez: ...
 - Commit: `<feat|fix|refactor|test|docs>: <what changed in one line>`
