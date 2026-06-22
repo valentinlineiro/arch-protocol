@@ -121,8 +121,8 @@ If scope has grown beyond what ATOM approved: apply ATOM before continuing — d
 Within a single session, two steps can be compressed after the first task:
 
 **ANCHOR (step 2):** If ANCHOR was already confirmed this session, run `git status --short` again.
-- Empty output → run `git rev-parse HEAD` and update `ANCHOR_HASH: <hash>`. Note "✓ ANCHOR: no new changes" and continue to ATOM.
-- Non-empty output → *"There are uncommitted changes since the last task — [files]. Commit before continuing — or explicitly confirm you want to proceed anyway."* Once resolved, run `git rev-parse HEAD` and update `ANCHOR_HASH: <hash>`.
+- Empty output → run `git rev-parse HEAD` and update `ANCHOR_HASH: <hash>`. Write back to `~/.arch/anchor_state`: `echo "dirty=false" > ~/.arch/anchor_state && echo "hash=$ANCHOR_HASH" >> ~/.arch/anchor_state`. Note "✓ ANCHOR: no new changes" and continue to ATOM.
+- Non-empty output → *"There are uncommitted changes since the last task — [files]. Commit before continuing — or explicitly confirm you want to proceed anyway."* Once resolved, run `git rev-parse HEAD` and update `ANCHOR_HASH: <hash>`. Write back to `~/.arch/anchor_state`.
 
 **PULL (step 4):** If the previous task used the same files, ask: *"Same context as last task?"*
 - Yes → note "📦 Context: same as previous task" and continue to SOLO

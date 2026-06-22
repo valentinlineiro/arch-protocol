@@ -1,6 +1,27 @@
 {
-  "description": "ARCH Protocol — LOG capture for continuous improvement",
+  "description": "ARCH Protocol — enforcement hooks",
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/on-session-start.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/on-pre-tool-write.sh"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
