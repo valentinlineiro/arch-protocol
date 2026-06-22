@@ -81,7 +81,9 @@ This declaration becomes the reference for EYES: if the diff touches anything no
 
 **6. EYES** — Compare declared context against actual changes:
 1. State which files you declared in PULL and the change you declared in SOLO (or the `🎯 GATE+PULL (S):` line for S tasks)
-2. Run `git diff --name-only` via Bash and present the output
+2. Ask: *"¿Hiciste algún commit entre PULL y ahora?"*
+   - No → run `git diff --name-only` and present the output
+   - Sí, N commits → run `git diff HEAD~N --name-only` and present the output
 3. If any file changed that was not declared: *"Toqué [archivo] que no declaré en PULL — ¿ese cambio era intencional?"* Do not proceed to LOG until the user confirms.
 4. If all changed files match PULL: *"Los cambios están dentro del contexto declarado. Listo para commit."*
 
@@ -185,7 +187,7 @@ When the user lists multiple tasks upfront ("tengo 4 arreglos pequeños"), offer
 
 **Per task, in sequence:**
 5. **SOLO** — Declare the single change for this task: `🎯 SOLO: [what changes and where]`. Wait for confirmation before writing code.
-6. **EYES** — Run the PULL-diff check for this task: state declared files, run `git diff --name-only` via Bash, present the output, surface any divergence before continuing to the next task.
+6. **EYES** — Ask if any intermediate commits were made during this task. Run `git diff --name-only` (or `git diff HEAD~N --name-only` if N commits were made). State declared files and SOLO declaration, present the diff output, surface any divergence before continuing to the next task.
 7. **LOG** — one per task, tagged with batch position (e.g., `BATCH 2/4 — fix login timeout`)
 
 **Non-negotiable:** EYES and LOG are per-task, never per-batch. Combining them into a single end-of-batch LOG removes the traceability that makes batch mode worth using.
