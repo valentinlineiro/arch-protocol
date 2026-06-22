@@ -171,6 +171,8 @@ By default, protocol language is Spanish. To change it, add this to the project'
 lang: en
 ```
 
+To set English globally across all projects, add the same block to `~/.claude/CLAUDE.md` (the user-level Claude Code config). Project-level `CLAUDE.md` takes precedence over the user-level file if both are present.
+
 Supported values: `es` (default), `en`. Whatever language is configured, use it consistently for all protocol steps — never mix protocol language with the user's task language. The mechanism is the shift itself; the specific language matters less than the contrast.
 
 ## Batch Mode
