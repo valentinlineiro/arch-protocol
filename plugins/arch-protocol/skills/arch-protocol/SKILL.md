@@ -47,11 +47,15 @@ Never ask "¿hiciste commit?" — check directly. Self-reporting bypasses the ga
 
 **3. ATOM** — Classify task scope before proceeding:
 
-| Size | Criteria | Action |
-|------|----------|--------|
-| **L** | >5 files or >3 responsibilities | *"Esta tarea es grande (L). Divídela en 2–3 tareas S/M primero. ¿Cómo prefieres proceder?"* *"Esta tarea es grande — confirma que estás en un modelo capaz antes de empezar."* Do not generate code until scope is agreed. |
-| **M** | 2–5 files or 2–3 responsibilities | Run all 7 steps at full length. |
-| **S** | ≤1 file and 1 responsibility | Run all 7 steps, but compress GATE + PULL into one block: `🎯 GATE+PULL (S): [goal in one sentence] · [file] · [constraint if any]` *"Esta tarea es pequeña — considera cambiarte a un modelo más rápido/económico si está disponible."* |
+**Classify by file count first. Use responsibility count only when file count falls exactly on a boundary.**
+
+| Size | Files | Responsibilities | Action |
+|------|-------|-----------------|--------|
+| **S** | 1 | 1 | Run all 7 steps, but compress GATE + PULL into one block: `🎯 GATE+PULL (S): [goal in one sentence] · [file] · [constraint if any]` *"Esta tarea es pequeña — considerá cambiarte a un modelo más rápido/económico si está disponible."* |
+| **M** | 2–5 | any | Run all 7 steps at full length. |
+| **L** | 6+ | any | *"Esta tarea es grande (L). Divídela en 2–3 tareas S/M primero. ¿Cómo preferís proceder?"* *"Esta tarea es grande — confirmá que estás en un modelo capaz antes de empezar."* Do not generate code until scope is agreed. |
+
+**Boundary rule:** If file count is exactly 1 but the task has 2+ distinct responsibilities → classify as M. When in doubt, size up — never size down.
 
 For S tasks, ANCHOR, SOLO, EYES, and LOG always run at full length. The compression is in presentation, not in discipline.
 
