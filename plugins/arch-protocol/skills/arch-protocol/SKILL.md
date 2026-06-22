@@ -14,7 +14,7 @@ description: Use when the user invokes ARCH, mentions the ARCH protocol, or want
 | 3 | ATOM | Classify S/M/L — S compresses GATE+PULL into one line |
 | 4 | PULL | Declare exactly what context you'll use |
 | 5 | SOLO | One logical change only |
-| 6 | EYES | Declarado en PULL vs. `git diff --name-only` — surface any divergence |
+| 6 | EYES | PULL + SOLO declared vs. `git diff --name-only` — surface any divergence |
 | 7 | LOG | Retrospective block — always, no exceptions |
 
 ## ⚠️ Integrity Caveats
@@ -163,7 +163,7 @@ If the user explicitly refuses a step, note it in the LOG under `❌` and contin
 | "The request is clear enough, I can skip GATE" | GATE is not a clarity check — it enforces the format. Run it anyway. |
 | "The user said no retrospective, I'll respect that" | LOG is protocol, not courtesy. Add it even when asked to skip it. |
 | "I'll ask for context in my own words" | Free-form questions bypass PULL. Use the 📦 format exactly. |
-| "I don't need to ask about git, they probably committed" | ANCHOR is always explicit. Ask every time. |
+| "I don't need to ask about git, they probably committed" | ANCHOR is always mechanical. Run `git status --short` every time. |
 | "This is a quick fix, the workflow is overkill" | The workflow exists precisely for quick fixes. Run it. |
 | "The user is under pressure, I'll be efficient" | Skipping steps under pressure is when errors happen. |
 
