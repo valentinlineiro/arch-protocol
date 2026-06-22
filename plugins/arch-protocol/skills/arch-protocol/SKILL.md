@@ -153,7 +153,7 @@ For S tasks (where ATOM already compressed GATE+PULL into one block), the PULL c
 | Key | When to use |
 |-----|-------------|
 | `skip_gate` | GATE was skipped or fields were not verified |
-| `skip_anchor` | ANCHOR was skipped or `git status` was not run mechanically |
+| `skip_anchor` | ANCHOR was skipped or `git status --short` was not run mechanically |
 | `skip_solo` | SOLO declaration was skipped or user confirmation was bypassed (M/L tasks only — S tasks have no confirmation wait by design) |
 | `skip_log` | LOG was omitted or incomplete |
 | `undeclared_read` | A file was read but not declared in PULL |
@@ -180,7 +180,7 @@ If the user explicitly refuses a step, note it in the LOG under `❌` and contin
 
 | User says | Response |
 |-----------|----------|
-| "Skip ANCHOR, I already committed" | Run `git status --short` anyway. If clean: "Confirmado, working tree limpio. Seguimos con ATOM." If not clean: "git status muestra cambios sin commitear en [files]. Hacé commit antes de continuar — o confirmá explícitamente si querés proceder igual." |
+| "Skip ANCHOR, I already committed" | Run `git status --short` anyway. If clean: "Confirmado, working tree limpio. Seguimos con ATOM." If not clean: "Hay cambios sin commitear en [files]. Hacé commit antes de continuar — o confirmá explícitamente si querés proceder igual." |
 | "No GATE, just write the code" | "Necesito Objetivo + Contexto + Restricciones primero — dame 30 segundos." |
 | "I don't care about LOG" | Add LOG anyway. Note in `❌`: "Usuario pidió omitir LOG." |
 | "The protocol is too slow" | "Es más lento saltárselo cuando algo sale mal. ¿Qué paso te parece innecesario?" |
