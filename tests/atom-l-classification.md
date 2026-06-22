@@ -9,7 +9,7 @@ I need to refactor the auth module: update the login handler, the token validato
 ## Expected markers
 - [ ] `"grande (L)"` — ATOM L classification label
 - [ ] `"Divídela en 2–3 tareas"` — decomposition instruction; proves the L action fired
-- [ ] `"confirma que estás en un modelo capaz antes de empezar"` — model upgrade hint added in v1.5.4; regression detector for ATOM table edits
+- [ ] `"confirmá que estás en un modelo capaz antes de empezar"` — model upgrade hint; regression detector for ATOM table edits
 
 ## Anti-markers
 - [ ] `` ` ``` ` `` — any code fence means the AI started implementing before scope was decomposed
