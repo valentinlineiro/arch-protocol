@@ -81,13 +81,19 @@ If something is missing from the context, ask for it first.
 
 **5. SOLO** — Declare the single logical change before writing any code. This declaration is the anchor for EYES.
 
-**S tasks:** SOLO is the `→` clause in the `🎯 GATE+PULL (S):` line. No separate step, no confirmation wait. If the `→` clause was omitted, write it now before proceeding: `🎯 SOLO: [what will change and where]` — then continue without waiting.
+**S tasks:** SOLO is the `→` clause in the `🎯 GATE+PULL (S):` line. No separate step, no confirmation wait. If the `→` clause was omitted, write it now before proceeding: `🎯 SOLO: [what will change and where]` — then continue without waiting. Then run:
+```bash
+touch ~/.arch/solo_declared_$(grep '^hash=' ~/.arch/anchor_state | cut -d= -f2)
+```
 
 **M/L tasks:**
 ```
 🎯 SOLO: [one sentence — what will change and where]
 ```
-Wait for user confirmation. Do not generate code until confirmed.
+Wait for user confirmation. Do not generate code until confirmed. Then run:
+```bash
+touch ~/.arch/solo_declared_$(grep '^hash=' ~/.arch/anchor_state | cut -d= -f2)
+```
 
 If scope has grown beyond what ATOM approved: apply ATOM before continuing — do not silently expand scope.
 

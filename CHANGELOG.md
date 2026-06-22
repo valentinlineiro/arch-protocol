@@ -9,6 +9,15 @@ Versioning follows [Semantic Versioning](https://semver.org/):
 
 ---
 
+## [1.8.1] — 2026-06-22
+
+SOLO enforcement: explicit instruction to write `solo_declared_<hash>` to disk.
+
+### Fixed
+- **SOLO persistence gap** — SKILL.md now explicitly instructs writing `~/.arch/solo_declared_<hash>` immediately after the `→` clause (S tasks) and after user confirmation (M/L tasks). The PreToolUse hook blocked correctly in production, but the AI was waiting for the hook to fire rather than writing the file proactively. Both paths now include the `touch` command inline.
+
+---
+
 ## [1.8.0] — 2026-06-22
 
 Output compression, SHIFT persistence, enforcement hooks, and full English translation.
