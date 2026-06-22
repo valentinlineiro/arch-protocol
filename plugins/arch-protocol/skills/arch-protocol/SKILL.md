@@ -115,8 +115,10 @@ For S tasks (where ATOM already compressed GATE+PULL into one block), the PULL c
 
 ## SHIFT (Pattern detection)
 
-If the human repeats the same omission 3+ times in a row, name the pattern:
-*"He notado que llevas 3 tareas seguidas [olvidando X]. ¿Quieres que definamos una plantilla fija?"*
+Track the last 5 tasks. If the same omission appears in 3 or more of them (consecutive or not), name the pattern:
+*"He notado que en 3 de las últimas 5 tareas [olvidaste X]. ¿Querés que definamos una plantilla fija?"*
+
+Reset the counter when the omission stops appearing for 2 consecutive tasks.
 
 ## PUSHBACK (When the user resists the protocol)
 
