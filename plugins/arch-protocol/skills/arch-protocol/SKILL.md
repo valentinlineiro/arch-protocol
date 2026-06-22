@@ -14,7 +14,7 @@ description: Use when the user invokes ARCH, mentions the ARCH protocol, or want
 | 3 | ATOM | Classify S/M/L — S compresses GATE+PULL into one line |
 | 4 | PULL | Declare exactly what context you'll use |
 | 5 | SOLO | One logical change only |
-| 6 | EYES | PULL + SOLO declared vs. `git diff --name-only` — surface any divergence |
+| 6 | EYES | PULL + SOLO declared vs. `git diff ANCHOR_HASH` — surface any divergence |
 | 7 | LOG | Retrospective block — always, no exceptions |
 
 ## ⚠️ Integrity Caveats
@@ -46,10 +46,11 @@ Para asegurarme de que entiendo bien, ¿puedes confirmar esto?
 Wait for confirmation, then continue from ANCHOR.
 
 **2. ANCHOR** — Run `git status --short` via Bash every time, even for quick fixes. Evaluate the output:
-- Empty output → clean working tree. Note "✓ ANCHOR: working tree clean" and proceed.
-- Non-empty output → *"Tenés cambios sin commitear en [files]. Hacé commit antes de continuar — o confirmá explícitamente si querés proceder igual."* Do not proceed until the user responds.
+- Empty output → clean working tree. Run `git rev-parse HEAD` and note `ANCHOR_HASH: <hash>`. Proceed.
+- Non-empty output → *"Tenés cambios sin commitear en [files]. Hacé commit antes de continuar — o confirmá explícitamente si querés proceder igual."* Do not proceed until the user responds. Once resolved, run `git rev-parse HEAD` and note `ANCHOR_HASH: <hash>`.
 
 Never ask "¿hiciste commit?" — check directly. Self-reporting bypasses the gate.
+`ANCHOR_HASH` is used at EYES to mechanically detect intermediate commits.
 
 **3. ATOM** — Classify task scope before proceeding:
 
@@ -87,9 +88,7 @@ This declaration becomes the reference for EYES: if the diff touches anything no
 
 **6. EYES** — Compare declared context against actual changes:
 1. State which files you declared in PULL and the change you declared in SOLO (or the `🎯 GATE+PULL (S):` line for S tasks)
-2. Ask: *"¿Hiciste algún commit entre PULL y ahora?"*
-   - No → run `git diff --name-only` and present the output
-   - Sí, N commits → run `git diff HEAD~N --name-only` and present the output
+2. Run `git log --oneline ANCHOR_HASH..HEAD` to detect intermediate commits. Then run `git diff ANCHOR_HASH --name-only` and present the output. Never ask the user how many commits they made.
 3. If any file changed that was not declared: *"Toqué [archivo] que no declaré en PULL — ¿ese cambio era intencional?"* Do not proceed to LOG until the user confirms.
 4. If all changed files match PULL: *"Los cambios están dentro del contexto declarado. Listo para commit."*
 
@@ -108,8 +107,8 @@ This declaration becomes the reference for EYES: if the diff touches anything no
 Within a single session, two steps can be compressed after the first task:
 
 **ANCHOR (step 2):** If ANCHOR was already confirmed this session, run `git status --short` again.
-- Empty output → note "✓ ANCHOR: sin cambios nuevos" and continue to ATOM
-- Non-empty output → *"Hay cambios sin commitear desde la última tarea — [files]. Hacé commit antes de continuar — o confirmá explícitamente si querés proceder igual."*
+- Empty output → run `git rev-parse HEAD` and update `ANCHOR_HASH: <hash>`. Note "✓ ANCHOR: sin cambios nuevos" and continue to ATOM.
+- Non-empty output → *"Hay cambios sin commitear desde la última tarea — [files]. Hacé commit antes de continuar — o confirmá explícitamente si querés proceder igual."* Once resolved, run `git rev-parse HEAD` and update `ANCHOR_HASH: <hash>`.
 
 **PULL (step 4):** If the previous task used the same files, ask: *"¿Mismo contexto que antes?"*
 - Sí → note "📦 Contexto: igual que tarea anterior" and continue to SOLO
@@ -197,7 +196,7 @@ When the user lists multiple tasks upfront ("tengo 4 arreglos pequeños"), offer
 
 **Per task, in sequence:**
 5. **SOLO** — Declare the single change for this task: `🎯 SOLO: [what changes and where]`. Wait for confirmation before writing code.
-6. **EYES** — Ask if any intermediate commits were made during this task. Run `git diff --name-only` (or `git diff HEAD~N --name-only` if N commits were made). State declared files and SOLO declaration, present the diff output, surface any divergence before continuing to the next task.
+6. **EYES** — Run `git log --oneline ANCHOR_HASH..HEAD` to detect intermediate commits. Run `git diff ANCHOR_HASH --name-only`. State declared files and SOLO declaration, present the diff output, surface any divergence before continuing to the next task. Never ask the user how many commits they made.
 7. **LOG** — one per task, tagged with batch position (e.g., `BATCH 2/4 — fix login timeout`)
 
 **Non-negotiable:** EYES and LOG are per-task, never per-batch. Combining them into a single end-of-batch LOG removes the traceability that makes batch mode worth using.
