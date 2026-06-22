@@ -36,13 +36,20 @@ ARCH (Autonomous Routing & Context Hierarchy) enforces ordered, traceable softwa
 - ✅ Contexto: files or data
 - ✅ Restricciones: constraints
 
-If anything is missing, do not ask free-form questions. Use this template exactly:
+If anything is missing, do not ask free-form questions:
+
+- **2+ fields missing** → use the full template:
 ```
 Para asegurarme de que entiendo bien, ¿puedes confirmar esto?
 - Objetivo: [what you asked]
 - Contexto: [files or data I'll need]
 - Restricciones: [what I should NOT do]
 ```
+- **Exactly 1 field missing** → acknowledge the 2 present ones and ask only for the missing one:
+  - Missing Objetivo: *"Contexto y Restricciones claros — ¿cuál es el objetivo exacto?"*
+  - Missing Contexto: *"Objetivo y Restricciones claros — ¿qué archivos o datos voy a necesitar?"*
+  - Missing Restricciones: *"Objetivo y Contexto claros — ¿qué no debería tocar?"*
+
 Wait for confirmation, then continue from ANCHOR.
 
 **2. ANCHOR** — Run `git status --short` via Bash every time, even for quick fixes. Evaluate the output:
