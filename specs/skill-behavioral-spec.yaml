@@ -6,6 +6,12 @@ description: >
   Does NOT encode phrasing preferences or template wording — those change
   too often and CI noise would undermine trust in the spec.
 
+  Rule type scoping note:
+  - step_must_contain / step_must_not_contain: resolves within Workflow steps 1-7 only.
+    Use for GATE, ANCHOR, ATOM, PULL, SOLO, EYES, LOG.
+  - section_must_contain / section_must_not_contain: resolves against top-level ## sections.
+    Use for Session State, Batch Mode, PUSHBACK, Quick Reference, SHIFT, Meta, etc.
+
 skill_path: plugins/arch-protocol/skills/arch-protocol/SKILL.md
 
 rules:
@@ -25,6 +31,9 @@ rules:
     note: >
       git status --short is the only allowed command form. Checks backtick-enclosed
       commands only — prose references like 'git status shows changes' are allowed.
+      FRAGILE: if SKILL.md ever adds a code example showing bare git status output
+      for contrast, this rule will false-positive. Failures here require manual review,
+      not an automatic fix.
 
   - id: anchor-captures-hash-main
     description: "ANCHOR step must run git rev-parse HEAD to capture hash"
