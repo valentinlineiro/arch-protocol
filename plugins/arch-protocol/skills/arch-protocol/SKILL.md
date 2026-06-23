@@ -27,9 +27,9 @@ description: Use when the user invokes ARCH, mentions the ARCH protocol, or want
 
 **First session check:** If `~/.arch/retro.md` does not exist, this is the user's first ARCH session. Before GATE, say: *"Starting ARCH for the first time. Ready to begin?"*
 
-**Evolve check + session reset (first GATE of session):** Call `mcp__arch-mcp__arch_version` — note the returned `protocol_version`. Call `mcp__arch-mcp__arch_shift_read` — note the returned `log_count_at_last_evolve`. Count `## 📝 LOG` sections in `~/.arch/retro.md` via Bash. If `(count − log_count_at_last_evolve) ≥ 5`, say once before proceeding: *"ARCH Protocol v[protocol_version] — You have 5+ new LOGs since the last arch-evolve — run `arch-evolve` whenever you're ready."* Then call `mcp__arch-mcp__arch_shift_write` with the state received from `arch_shift_read` updated so `session_task_count` is `0`. Then continue to GATE immediately.
+**Evolve check + session reset (first GATE of session):** Call `mcp__plugin_arch-protocol_arch-mcp__arch_version` — note the returned `protocol_version`. Call `mcp__plugin_arch-protocol_arch-mcp__arch_shift_read` — note the returned `log_count_at_last_evolve`. Count `## 📝 LOG` sections in `~/.arch/retro.md` via Bash. If `(count − log_count_at_last_evolve) ≥ 5`, say once before proceeding: *"ARCH Protocol v[protocol_version] — You have 5+ new LOGs since the last arch-evolve — run `arch-evolve` whenever you're ready."* Then call `mcp__plugin_arch-protocol_arch-mcp__arch_shift_write` with the state received from `arch_shift_read` updated so `session_task_count` is `0`. Then continue to GATE immediately.
 
-**1. GATE** — Call `mcp__arch-mcp__arch_shift_read` and use the returned `session_task_count`. If `session_task_count >= 5`, say: *"⚠️ You've completed N M/L tasks this session. Context decay is likely. Continue, or stop here and start fresh next session?"* Wait for the user's response before proceeding. Then verify the request has all three:
+**1. GATE** — Call `mcp__plugin_arch-protocol_arch-mcp__arch_shift_read` and use the returned `session_task_count`. If `session_task_count >= 5`, say: *"⚠️ You've completed N M/L tasks this session. Context decay is likely. Continue, or stop here and start fresh next session?"* Wait for the user's response before proceeding. Then verify the request has all three:
 - ✅ Objective: clear goal
 - ✅ Context: files or data
 - ✅ Constraints: what not to touch
@@ -50,9 +50,9 @@ To make sure I understand correctly:
 
 Wait for confirmation, then continue from ANCHOR.
 
-**2. ANCHOR** — Call `mcp__arch-mcp__arch_anchor`. It runs `git status --short` and `git rev-parse HEAD`, writes anchor state, and returns `{ dirty, hash, uncommitted_files }`. Evaluate the result:
+**2. ANCHOR** — Call `mcp__plugin_arch-protocol_arch-mcp__arch_anchor`. It runs `git status --short` and `git rev-parse HEAD`, writes anchor state, and returns `{ dirty, hash, uncommitted_files }`. Evaluate the result:
 - `dirty: false` → clean working tree. Note `ANCHOR_HASH: <hash>`. Proceed.
-- `dirty: true` → *"You have uncommitted changes in [uncommitted_files]. Commit before continuing — or explicitly confirm you want to proceed anyway."* Do not proceed until the user responds. Once resolved, call `mcp__arch-mcp__arch_anchor` again and note the new `ANCHOR_HASH`.
+- `dirty: true` → *"You have uncommitted changes in [uncommitted_files]. Commit before continuing — or explicitly confirm you want to proceed anyway."* Do not proceed until the user responds. Once resolved, call `mcp__plugin_arch-protocol_arch-mcp__arch_anchor` again and note the new `ANCHOR_HASH`.
 
 Never ask "did you commit?" — check directly. Self-reporting bypasses the gate.
 `ANCHOR_HASH` is used at EYES to mechanically detect intermediate commits.
@@ -81,13 +81,13 @@ If something is missing from the context, ask for it first.
 
 **5. SOLO** — Declare the single logical change before writing any code. This declaration is the anchor for EYES.
 
-**S tasks:** SOLO is the `→` clause in the `🎯 GATE+PULL (S):` line. No separate step, no confirmation wait. If the `→` clause was omitted, write it now before proceeding: `🎯 SOLO: [what will change and where]` — then continue without waiting. Then call `mcp__arch-mcp__arch_solo_declare` with `{ "hash": "<ANCHOR_HASH>" }`.
+**S tasks:** SOLO is the `→` clause in the `🎯 GATE+PULL (S):` line. No separate step, no confirmation wait. If the `→` clause was omitted, write it now before proceeding: `🎯 SOLO: [what will change and where]` — then continue without waiting. Then call `mcp__plugin_arch-protocol_arch-mcp__arch_solo_declare` with `{ "hash": "<ANCHOR_HASH>" }`.
 
 **M/L tasks:**
 ```
 🎯 SOLO: [one sentence — what will change and where]
 ```
-Wait for user confirmation. Do not generate code until confirmed. Then call `mcp__arch-mcp__arch_solo_declare` with `{ "hash": "<ANCHOR_HASH>" }`.
+Wait for user confirmation. Do not generate code until confirmed. Then call `mcp__plugin_arch-protocol_arch-mcp__arch_solo_declare` with `{ "hash": "<ANCHOR_HASH>" }`.
 
 If scope has grown beyond what ATOM approved: apply ATOM before continuing — do not silently expand scope.
 
@@ -104,10 +104,10 @@ If scope has grown beyond what ATOM approved: apply ATOM before continuing — d
 **7. LOG** — Close every task. LOG is non-negotiable, even if the user says "just give me the code", "no summary", or "stop there".
 
 **Execution order within LOG:**
-1. Call `mcp__arch-mcp__arch_shift_read` — use the returned state to determine Why depth for each `omit:` key (single by default; see SHIFT for escalation)
+1. Call `mcp__plugin_arch-protocol_arch-mcp__arch_shift_read` — use the returned state to determine Why depth for each `omit:` key (single by default; see SHIFT for escalation)
 2. Write the LOG block
-3. If M or L task: call `mcp__arch-mcp__arch_session_increment`
-4. If any `omit:` key was recorded: call `mcp__arch-mcp__arch_shift_write` with the state from step 1, incrementing the matching omission counter by 1
+3. If M or L task: call `mcp__plugin_arch-protocol_arch-mcp__arch_session_increment`
+4. If any `omit:` key was recorded: call `mcp__plugin_arch-protocol_arch-mcp__arch_shift_write` with the state from step 1, incrementing the matching omission counter by 1
 
 **S tasks (no incident):** `📝 LOG (S): no incidents · commit: <type>: <what changed>` — do not increment `shift.json`.
 
@@ -121,15 +121,15 @@ If scope has grown beyond what ATOM approved: apply ATOM before continuing — d
 - Commit: `<feat|fix|refactor|test|docs>: <what changed in one line>`
 ```
 > The hook persists this block to `~/.arch/retro.md` automatically. Once persisted, do not re-reference previous LOG blocks in responses — `~/.arch/retro.md` is the source of truth.
-> After writing LOG, call `mcp__arch-mcp__arch_shift_write` with the incremented omission counter if an `omit:` key was recorded. If no omission occurred, do not call `arch_shift_write`. Always call `mcp__arch-mcp__arch_session_increment` for M/L tasks (step 3 above).
+> After writing LOG, call `mcp__plugin_arch-protocol_arch-mcp__arch_shift_write` with the incremented omission counter if an `omit:` key was recorded. If no omission occurred, do not call `arch_shift_write`. Always call `mcp__plugin_arch-protocol_arch-mcp__arch_session_increment` for M/L tasks (step 3 above).
 
 ## Session State
 
 Within a single session, two steps can be compressed after the first task:
 
-**ANCHOR (step 2):** If ANCHOR was already confirmed this session, call `mcp__arch-mcp__arch_anchor` again.
+**ANCHOR (step 2):** If ANCHOR was already confirmed this session, call `mcp__plugin_arch-protocol_arch-mcp__arch_anchor` again.
 - `dirty: false` → update `ANCHOR_HASH` to the returned `hash`. Note "✓ ANCHOR: no new changes" and continue to ATOM.
-- `dirty: true` → *"There are uncommitted changes since the last task — [uncommitted_files]. Commit before continuing — or explicitly confirm you want to proceed anyway."* Once resolved, call `mcp__arch-mcp__arch_anchor` again and update `ANCHOR_HASH` to the returned `hash`.
+- `dirty: true` → *"There are uncommitted changes since the last task — [uncommitted_files]. Commit before continuing — or explicitly confirm you want to proceed anyway."* Once resolved, call `mcp__plugin_arch-protocol_arch-mcp__arch_anchor` again and update `ANCHOR_HASH` to the returned `hash`.
 
 **PULL (step 4):** If the previous task used the same files, ask: *"Same context as last task?"*
 - Yes → note "📦 Context: same as previous task" and continue to SOLO
