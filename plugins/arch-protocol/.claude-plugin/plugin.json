@@ -1,6 +1,6 @@
 {
   "name": "arch-protocol",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "ARCH protocol skill — structured human+AI software development based on Toyota Production System principles. Enforces atomic tasks, pre-flight validation, context declaration, and kaizen retrospectives.",
   "author": {
     "name": "Valentín Liñeiro"
@@ -9,7 +9,7 @@
   "mcpServers": {
     "arch-mcp": {
       "command": "npx",
-      "args": ["-y", "@valentinlineiro/arch-mcp@1.0.0"]
+      "args": ["-y", "@valentinlineiro/arch-mcp@1.1.0"]
     }
   }
 }

@@ -4,13 +4,14 @@
 
 | Step | Name | One-liner |
 |------|------|-----------|
-| 1 | GATE | Objective + Context + Constraints — all three, or stop |
-| 2 | ANCHOR | Check `git status --short` every time |
-| 3 | ATOM | Classify S/M/L — S compresses GATE+PULL+SOLO into one line |
-| 4 | PULL | Declare exactly what context you'll use |
-| 5 | SOLO | One logical change only |
-| 6 | EYES | PULL + SOLO declared vs. `git diff ANCHOR_HASH` — surface any divergence |
-| 7 | LOG | Retrospective block — always, no exceptions |
+| 1 | FEED | Surface calibrated priors + constraints from the last LOG — or skip cleanly |
+| 2 | GATE | Objective + Context + Constraints — all three, or stop |
+| 3 | ANCHOR | Check `git status --short` every time |
+| 4 | ATOM | Classify S/M/L — S compresses GATE+PULL+SOLO into one line |
+| 5 | PULL | Declare exactly what context you'll use |
+| 6 | SOLO | One logical change only |
+| 7 | EYES | PULL + SOLO declared vs. `git diff ANCHOR_HASH` — surface any divergence |
+| 8 | LOG | Retrospective block — always, no exceptions |
 
 > ⚠️ Write integrity is mechanical (EYES uses `git diff`). Read integrity is partial — Bash reads are invisible to PULL+EYES by design.
 
@@ -22,7 +23,24 @@
 
 **Evolve check (first GATE of session):** Count `## 📝 LOG` sections in `~/.arch/retro.md`. If `(count − log_count_at_last_evolve) ≥ 5`, say once before proceeding: *"You have 5+ new LOGs since the last arch-evolve — run `arch-evolve` whenever you're ready."* Then continue to GATE immediately.
 
-**1. GATE** — Before generating any code, verify the request has all three:
+**1. FEED** — Call `TOOL: arch_feed_read` with `{ "project_path": "<cwd>" }`.
+
+If `has_feed: true`:
+```
+🔄 FEED: Carry-forward from previous task (commit: <last_commit>)
+- 💡 Calibrated Prior: <calibrated_prior>
+- 🎯 Constraint: <constraint>
+```
+Prepend `<constraint>` to the Constraints field in GATE. If the user overrides, note the override.
+
+If `has_feed: false`:
+```
+✓ FEED: no constraints carried forward.
+```
+
+**S-task compression:** If the task is S and `has_feed: false`: `✓ FEED (S): no constraints carried forward.` If `has_feed: true`, FEED runs at full length — carried constraints never compress.
+
+**2. GATE** — Before generating any code, verify the request has all three:
 - ✅ Objective: clear goal
 - ✅ Context: files or data
 - ✅ Constraints: what not to touch
@@ -43,28 +61,28 @@ To make sure I understand correctly:
 
 Wait for confirmation, then continue from ANCHOR.
 
-**2. ANCHOR** — Run `git status --short` via Bash every time, even for quick fixes. Evaluate the output:
+**3. ANCHOR** — Run `git status --short` via Bash every time, even for quick fixes. Evaluate the output:
 - Empty output → clean working tree. Run `git rev-parse HEAD` and note `ANCHOR_HASH: <hash>`. Proceed.
 - Non-empty output → *"You have uncommitted changes in [files]. Commit before continuing — or explicitly confirm you want to proceed anyway."* Do not proceed until the user responds. Once resolved, run `git rev-parse HEAD` and note `ANCHOR_HASH: <hash>`.
 
 Never ask "did you commit?" — check directly. Self-reporting bypasses the gate.
 `ANCHOR_HASH` is used at EYES to mechanically detect intermediate commits.
 
-**3. ATOM** — Classify task scope before proceeding:
+**4. ATOM** — Classify task scope before proceeding:
 
 **Classify by file count first. Use responsibility count only when file count falls exactly on a boundary.**
 
 | Size | Files | Responsibilities | Action |
 |------|-------|-----------------|--------|
-| **S** | 1 | 1 | Run all 7 steps, but compress GATE + PULL + SOLO into one block: `🎯 GATE+PULL (S): [goal in one sentence] · [file] · [constraint if any] → [what will change]` The `→` clause is mandatory — it is the SOLO anchor for EYES. If it cannot be written in one clause, classify as M. *"Small task — consider switching to a faster/cheaper model if available."* |
-| **M** | 2–5 | any | Run all 7 steps at full length. |
+| **S** | 1 | 1 | Run all 8 steps, but compress GATE + PULL + SOLO into one block: `🎯 GATE+PULL (S): [goal in one sentence] · [file] · [constraint if any] → [what will change]` The `→` clause is mandatory — it is the SOLO anchor for EYES. If it cannot be written in one clause, classify as M. *"Small task — consider switching to a faster/cheaper model if available."* |
+| **M** | 2–5 | any | Run all 8 steps at full length. |
 | **L** | 6+ | any | *"This task is large (L). Break it into 2–3 S/M tasks first. How would you like to proceed?"* *"Large task — confirm you're on a capable model before starting."* Do not generate code until scope is agreed. |
 
 **Boundary rule:** If file count is exactly 1 but the task has 2+ distinct responsibilities → classify as M. When in doubt, size up — never size down.
 
-For S tasks, ANCHOR always runs at full length. SOLO is absorbed into the `🎯 GATE+PULL (S):` line via the `→` clause. EYES and LOG use compressed formats — see steps 6–7.
+For S tasks, ANCHOR always runs at full length. SOLO is absorbed into the `🎯 GATE+PULL (S):` line via the `→` clause. EYES and LOG use compressed formats — see steps 7–8.
 
-**4. PULL** — Declare exactly what context you will use, in this exact format:
+**5. PULL** — Declare exactly what context you will use, in this exact format:
 ```
 📦 Context I'll use:
 - file.py (to read class X)
@@ -72,7 +90,7 @@ For S tasks, ANCHOR always runs at full length. SOLO is absorbed into the `🎯 
 ```
 If something is missing from the context, ask for it first.
 
-**5. SOLO** — Declare the single logical change before writing any code. This declaration is the anchor for EYES.
+**6. SOLO** — Declare the single logical change before writing any code. This declaration is the anchor for EYES.
 
 **S tasks:** SOLO is the `→` clause in the `🎯 GATE+PULL (S):` line. No separate step, no confirmation wait. If the `→` clause was omitted, write it now before proceeding: `🎯 SOLO: [what will change and where]` — then continue without waiting.
 
@@ -84,7 +102,7 @@ Wait for user confirmation. Do not generate code until confirmed.
 
 If scope has grown beyond what ATOM approved: apply ATOM before continuing — do not silently expand scope.
 
-**6. EYES** — Compare declared context against actual changes.
+**7. EYES** — Compare declared context against actual changes.
 
 **S tasks:** Run `git diff ANCHOR_HASH --name-only`. If only the declared file changed: `✓ EYES (S): [filename] only, matches SOLO.` If anything else changed, fall through to the full check.
 
@@ -94,7 +112,7 @@ If scope has grown beyond what ATOM approved: apply ATOM before continuing — d
 3. If any file changed that was not declared: *"I touched [file] which I didn't declare in PULL — was that intentional?"* Do not proceed to LOG until the user confirms.
 4. If all changed files match PULL: *"Changes are within the declared context. Ready to commit."*
 
-**7. LOG** — Close every task. LOG is non-negotiable, even if the user says "just give me the code", "no summary", or "stop there".
+**8. LOG** — Close every task. LOG is non-negotiable, even if the user says "just give me the code", "no summary", or "stop there".
 
 **S tasks (no incident):** `📝 LOG (S): no incidents · commit: <type>: <what changed>` — do not increment `shift.json`.
 
@@ -113,11 +131,11 @@ If scope has grown beyond what ATOM approved: apply ATOM before continuing — d
 
 Within a single session, two steps can be compressed after the first task:
 
-**ANCHOR (step 2):** If ANCHOR was already confirmed this session, run `git status --short` again.
+**ANCHOR (step 3):** If ANCHOR was already confirmed this session, run `git status --short` again.
 - Empty output → run `git rev-parse HEAD` and update `ANCHOR_HASH: <hash>`. Note "✓ ANCHOR: no new changes" and continue to ATOM.
 - Non-empty output → *"There are uncommitted changes since the last task — [files]. Commit before continuing — or explicitly confirm you want to proceed anyway."* Once resolved, run `git rev-parse HEAD` and update `ANCHOR_HASH: <hash>`.
 
-**PULL (step 4):** If the previous task used the same files, ask: *"Same context as last task?"*
+**PULL (step 5):** If the previous task used the same files, ask: *"Same context as last task?"*
 - Yes → note "📦 Context: same as previous task" and continue to SOLO
 - No → run full PULL
 
@@ -131,6 +149,7 @@ For S tasks (where ATOM already compressed GATE+PULL into one block), the PULL c
 ```json
 {
   "omissions": {
+    "skip_feed": 0,
     "skip_gate": 0,
     "skip_anchor": 0,
     "skip_solo": 0,
@@ -147,6 +166,7 @@ For S tasks (where ATOM already compressed GATE+PULL into one block), the PULL c
 
 | Key | When to use |
 |-----|-------------|
+| `skip_feed` | FEED was skipped or `arch_feed_read` was not called |
 | `skip_gate` | GATE was skipped or fields were not verified |
 | `skip_anchor` | ANCHOR was skipped or `git status --short` was not run mechanically |
 | `skip_solo` | SOLO declaration was skipped or user confirmation was bypassed (M/L tasks only — S tasks have no confirmation wait by design) |

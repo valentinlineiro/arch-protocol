@@ -3,7 +3,7 @@ name: arch-protocol
 description: Use when the user invokes ARCH, mentions the ARCH protocol, or wants to apply Toyota Production System discipline to a software development task
 ---
 
-<!-- Claude Code adapter. Source of truth: PROTOCOL.md -->
+<!-- Claude Code adapter. Adapted from platform-agnostic specification in PROTOCOL.md -->
 
 # ARCH Protocol
 
@@ -11,13 +11,14 @@ description: Use when the user invokes ARCH, mentions the ARCH protocol, or want
 
 | Step | Name | One-liner |
 |------|------|-----------|
-| 1 | GATE | Objective + Context + Constraints — all three, or stop |
-| 2 | ANCHOR | Check `git status --short` every time |
-| 3 | ATOM | Classify S/M/L — S compresses GATE+PULL+SOLO into one line |
-| 4 | PULL | Declare exactly what context you'll use |
-| 5 | SOLO | One logical change only |
-| 6 | EYES | PULL + SOLO declared vs. `git diff ANCHOR_HASH` — surface any divergence |
-| 7 | LOG | Retrospective block — always, no exceptions |
+| 1 | FEED | Surface calibrated priors + constraints from the last LOG — or skip cleanly |
+| 2 | GATE | Objective + Context + Constraints — all three, or stop |
+| 3 | ANCHOR | Check `git status --short` every time |
+| 4 | ATOM | Classify S/M/L — S compresses GATE+PULL+SOLO into one line |
+| 5 | PULL | Declare exactly what context you'll use |
+| 6 | SOLO | One logical change only |
+| 7 | EYES | PULL + SOLO declared vs. `git diff ANCHOR_HASH` — surface any divergence |
+| 8 | LOG | Retrospective block — always, no exceptions |
 
 > ⚠️ Write integrity is mechanical (EYES uses `git diff`). Read integrity is partial — Bash reads are invisible to PULL+EYES by design.
 
@@ -29,7 +30,24 @@ description: Use when the user invokes ARCH, mentions the ARCH protocol, or want
 
 **Evolve check + session reset (first GATE of session):** Call `mcp__plugin_arch-protocol_arch-mcp__arch_version` — note the returned `protocol_version`. Call `mcp__plugin_arch-protocol_arch-mcp__arch_shift_read` — note the returned `log_count_at_last_evolve`. Count `## 📝 LOG` sections in `~/.arch/retro.md` via Bash. If `(count − log_count_at_last_evolve) ≥ 5`, say once before proceeding: *"ARCH Protocol v[protocol_version] — You have 5+ new LOGs since the last arch-evolve — run `arch-evolve` whenever you're ready."* Then call `mcp__plugin_arch-protocol_arch-mcp__arch_shift_write` with the state received from `arch_shift_read` updated so `session_task_count` is `0`. Then continue to GATE immediately.
 
-**1. GATE** — Call `mcp__plugin_arch-protocol_arch-mcp__arch_shift_read` and use the returned `session_task_count`. If `session_task_count >= 5`, say: *"⚠️ You've completed N M/L tasks this session. Context decay is likely. Continue, or stop here and start fresh next session?"* Wait for the user's response before proceeding. Then verify the request has all three:
+**1. FEED** — Call `mcp__plugin_arch-protocol_arch-mcp__arch_feed_read` with `{ "project_path": "<cwd>" }`.
+
+If `has_feed: true`:
+```
+🔄 FEED: Carry-forward from previous task (commit: <last_commit>)
+- 💡 Calibrated Prior: <calibrated_prior>
+- 🎯 Constraint: <constraint>
+```
+Prepend `<constraint>` to the Constraints field in GATE. If the user overrides, note the override in GATE — do not drop it silently.
+
+If `has_feed: false`:
+```
+✓ FEED: no constraints carried forward.
+```
+
+**S-task compression:** If the task is S and `has_feed: false`: `✓ FEED (S): no constraints carried forward.` If `has_feed: true`, run FEED at full length regardless of task size — carried constraints never compress.
+
+**2. GATE** — Call `mcp__plugin_arch-protocol_arch-mcp__arch_shift_read` and use the returned `session_task_count`. If `session_task_count >= 5`, say: *"⚠️ You've completed N M/L tasks this session. Context decay is likely. Continue, or stop here and start fresh next session?"* Wait for the user's response before proceeding. Then verify the request has all three:
 - ✅ Objective: clear goal
 - ✅ Context: files or data
 - ✅ Constraints: what not to touch
@@ -50,28 +68,28 @@ To make sure I understand correctly:
 
 Wait for confirmation, then continue from ANCHOR.
 
-**2. ANCHOR** — Call `mcp__plugin_arch-protocol_arch-mcp__arch_anchor`. It runs `git status --short` and `git rev-parse HEAD`, writes anchor state, and returns `{ dirty, hash, uncommitted_files }`. Evaluate the result:
+**3. ANCHOR** — Call `mcp__plugin_arch-protocol_arch-mcp__arch_anchor`. It runs `git status --short` and `git rev-parse HEAD`, writes anchor state, and returns `{ dirty, hash, uncommitted_files }`. Evaluate the result:
 - `dirty: false` → clean working tree. Note `ANCHOR_HASH: <hash>`. Proceed.
 - `dirty: true` → *"You have uncommitted changes in [uncommitted_files]. Commit before continuing — or explicitly confirm you want to proceed anyway."* Do not proceed until the user responds. Once resolved, call `mcp__plugin_arch-protocol_arch-mcp__arch_anchor` again and note the new `ANCHOR_HASH`.
 
 Never ask "did you commit?" — check directly. Self-reporting bypasses the gate.
 `ANCHOR_HASH` is used at EYES to mechanically detect intermediate commits.
 
-**3. ATOM** — Classify task scope before proceeding:
+**4. ATOM** — Classify task scope before proceeding:
 
 **Classify by file count first. Use responsibility count only when file count falls exactly on a boundary.**
 
 | Size | Files | Responsibilities | Action |
 |------|-------|-----------------|--------|
-| **S** | 1 | 1 | Run all 7 steps, but compress GATE + PULL + SOLO into one block: `🎯 GATE+PULL (S): [goal in one sentence] · [file] · [constraint if any] → [what will change]` The `→` clause is mandatory — it is the SOLO anchor for EYES. If it cannot be written in one clause, classify as M. *"Small task — consider switching to a faster/cheaper model if available."* |
-| **M** | 2–5 | any | Run all 7 steps at full length. |
+| **S** | 1 | 1 | Run all 8 steps, but compress GATE + PULL + SOLO into one block: `🎯 GATE+PULL (S): [goal in one sentence] · [file] · [constraint if any] → [what will change]` The `→` clause is mandatory — it is the SOLO anchor for EYES. If it cannot be written in one clause, classify as M. *"Small task — consider switching to a faster/cheaper model if available."* |
+| **M** | 2–5 | any | Run all 8 steps at full length. |
 | **L** | 6+ | any | *"This task is large (L). Break it into 2–3 S/M tasks first. How would you like to proceed?"* *"Large task — confirm you're on a capable model before starting."* Do not generate code until scope is agreed. |
 
 **Boundary rule:** If file count is exactly 1 but the task has 2+ distinct responsibilities → classify as M. When in doubt, size up — never size down.
 
-For S tasks, ANCHOR always runs at full length. SOLO is absorbed into the `🎯 GATE+PULL (S):` line via the `→` clause. EYES and LOG use compressed formats — see steps 6–7.
+For S tasks, ANCHOR always runs at full length. SOLO is absorbed into the `🎯 GATE+PULL (S):` line via the `→` clause. EYES and LOG use compressed formats — see steps 7–8.
 
-**4. PULL** — Declare exactly what context you will use, in this exact format:
+**5. PULL** — Declare exactly what context you will use, in this exact format:
 ```
 📦 Context I'll use:
 - file.py (to read class X)
@@ -79,7 +97,7 @@ For S tasks, ANCHOR always runs at full length. SOLO is absorbed into the `🎯 
 ```
 If something is missing from the context, ask for it first.
 
-**5. SOLO** — Declare the single logical change before writing any code. This declaration is the anchor for EYES.
+**6. SOLO** — Declare the single logical change before writing any code. This declaration is the anchor for EYES.
 
 **S tasks:** SOLO is the `→` clause in the `🎯 GATE+PULL (S):` line. No separate step, no confirmation wait. If the `→` clause was omitted, write it now before proceeding: `🎯 SOLO: [what will change and where]` — then continue without waiting. Then call `mcp__plugin_arch-protocol_arch-mcp__arch_solo_declare` with `{ "hash": "<ANCHOR_HASH>" }`.
 
@@ -91,7 +109,7 @@ Wait for user confirmation. Do not generate code until confirmed. Then call `mcp
 
 If scope has grown beyond what ATOM approved: apply ATOM before continuing — do not silently expand scope.
 
-**6. EYES** — Compare declared context against actual changes.
+**7. EYES** — Compare declared context against actual changes.
 
 **S tasks:** Run `git diff ANCHOR_HASH --name-only`. If only the declared file changed: `✓ EYES (S): [filename] only, matches SOLO.` If anything else changed, fall through to the full check.
 
@@ -101,7 +119,7 @@ If scope has grown beyond what ATOM approved: apply ATOM before continuing — d
 3. If any file changed that was not declared: *"I touched [file] which I didn't declare in PULL — was that intentional?"* Do not proceed to LOG until the user confirms.
 4. If all changed files match PULL: *"Changes are within the declared context. Ready to commit."*
 
-**7. LOG** — Close every task. LOG is non-negotiable, even if the user says "just give me the code", "no summary", or "stop there".
+**8. LOG** — Close every task. LOG is non-negotiable, even if the user says "just give me the code", "no summary", or "stop there".
 
 **Execution order within LOG:**
 1. Call `mcp__plugin_arch-protocol_arch-mcp__arch_shift_read` — use the returned state to determine Why depth for each `omit:` key (single by default; see SHIFT for escalation)
@@ -121,17 +139,17 @@ If scope has grown beyond what ATOM approved: apply ATOM before continuing — d
 - Commit: `<feat|fix|refactor|test|docs>: <what changed in one line>`
 ```
 > The hook persists this block to `~/.arch/retro.md` automatically. Once persisted, do not re-reference previous LOG blocks in responses — `~/.arch/retro.md` is the source of truth.
-> After writing LOG, call `mcp__plugin_arch-protocol_arch-mcp__arch_shift_write` with the incremented omission counter if an `omit:` key was recorded. If no omission occurred, do not call `arch_shift_write`. Always call `mcp__plugin_arch-protocol_arch-mcp__arch_session_increment` for M/L tasks (step 3 above).
+> After writing LOG, call `mcp__plugin_arch-protocol_arch-mcp__arch_shift_write` with the incremented omission counter if an `omit:` key was recorded. If no omission occurred, do not call `arch_shift_write`. Always call `mcp__plugin_arch-protocol_arch-mcp__arch_session_increment` for M/L tasks (LOG step 3 above).
 
 ## Session State
 
 Within a single session, two steps can be compressed after the first task:
 
-**ANCHOR (step 2):** If ANCHOR was already confirmed this session, call `mcp__plugin_arch-protocol_arch-mcp__arch_anchor` again.
+**ANCHOR (step 3):** If ANCHOR was already confirmed this session, call `mcp__plugin_arch-protocol_arch-mcp__arch_anchor` again.
 - `dirty: false` → update `ANCHOR_HASH` to the returned `hash`. Note "✓ ANCHOR: no new changes" and continue to ATOM.
 - `dirty: true` → *"There are uncommitted changes since the last task — [uncommitted_files]. Commit before continuing — or explicitly confirm you want to proceed anyway."* Once resolved, call `mcp__plugin_arch-protocol_arch-mcp__arch_anchor` again and update `ANCHOR_HASH` to the returned `hash`.
 
-**PULL (step 4):** If the previous task used the same files, ask: *"Same context as last task?"*
+**PULL (step 5):** If the previous task used the same files, ask: *"Same context as last task?"*
 - Yes → note "📦 Context: same as previous task" and continue to SOLO
 - No → run full PULL
 
@@ -146,6 +164,7 @@ For S tasks (where ATOM already compressed GATE+PULL into one block), the PULL c
 {
   "session_task_count": 0,
   "omissions": {
+    "skip_feed": 0,
     "skip_gate": 0,
     "skip_anchor": 0,
     "skip_solo": 0,
@@ -162,6 +181,7 @@ For S tasks (where ATOM already compressed GATE+PULL into one block), the PULL c
 
 | Key | When to use |
 |-----|-------------|
+| `skip_feed` | FEED was skipped or `arch_feed_read` was not called |
 | `skip_gate` | GATE was skipped or fields were not verified |
 | `skip_anchor` | ANCHOR was skipped or `git status --short` was not run mechanically |
 | `skip_solo` | SOLO declaration was skipped or user confirmation was bypassed (M/L tasks only — S tasks have no confirmation wait by design) |
