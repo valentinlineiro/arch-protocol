@@ -14,7 +14,7 @@ arch-mcp/
     index.ts                  # MCP server entry, registers all tools
     tools/
       anchor.ts               # arch_anchor
-      shift.ts                # arch_shift_read, arch_shift_write
+      shift.ts                # arch_shift_read, arch_shift_write, arch_session_increment
       retro.ts                # arch_retro_append
       solo.ts                 # arch_solo_declare
       version.ts              # arch_version
@@ -34,6 +34,8 @@ arch-mcp/
       paths.test.ts
   package.json
   tsconfig.json
+  vitest.config.ts
+  .gitignore
   README.md
 ```
 
@@ -80,6 +82,19 @@ Input:  { state: ShiftState }
 Output: { written: true }
 ```
 
+**Design note:** Full-replace rather than patch. Every write requires a preceding `arch_shift_read`. This removes merge complexity (no deep-merge of nested omission counters), but means there is a read-modify window between the two calls. In a single-user CLI context this is not a real race condition. The one place where this tension is most visible is session counter increments — which is why `arch_session_increment` exists as an atomic tool rather than relying on the read-modify-write sequence.
+
+### `arch_session_increment`
+
+Atomically increments `session_task_count` in `~/.arch/shift.json`. Reads, increments, and writes in one tool call — no read-modify window from the skill's side.
+
+```
+Input:  {}
+Output: { session_task_count: number }
+```
+
+Returns the new count. The skill calls this at the end of LOG for M/L tasks. The threshold check (warn if ≥ 5) stays in the skill — this tool only manages the counter.
+
 ### `arch_retro_append`
 
 Appends a LOG block to the correct retro file. Chooses `~/.arch/retro.md` (global) or `.arch/retro.md` (project) based on whether `.arch/` exists in the current working directory.
@@ -112,6 +127,10 @@ Output: { mcp_version: string; protocol_version: string | null }
 ```
 
 `protocol_version` is `null` if the plugin isn't installed. The skill can surface a compatibility warning when the two drift.
+
+### `arch_eyes` — deferred
+
+Not included in v1. The core mechanical operation at EYES is `git diff ANCHOR_HASH --name-only`, which the skill calls directly via Bash. Wrapping it in a tool adds indirection without structural gain: the diff output is prose-interpreted by the skill anyway, and `ANCHOR_HASH` is already in context from `arch_anchor`. If EYES gains pre/post classification logic (as proposed in the external proposals evaluated before this design), a tool becomes the right place for it — but that belongs in the next protocol version, not here.
 
 ---
 
@@ -207,8 +226,10 @@ The MCP server replaces the current inline shell commands. The skill's prose ins
 | `git status --short` + `git rev-parse HEAD` + `anchor_state` write | `arch_anchor` |
 | `cat ~/.arch/shift.json` + manual JSON parse | `arch_shift_read` |
 | Write updated shift.json | `arch_shift_write` |
+| Increment `session_task_count` (read → increment → write) | `arch_session_increment` |
 | Append to `~/.arch/retro.md` or `.arch/retro.md` | `arch_retro_append` |
 | `touch ~/.arch/solo_declared_<hash>` | `arch_solo_declare` |
+| `git diff ANCHOR_HASH --name-only` at EYES | **stays as direct Bash call** — see `arch_eyes` deferral note |
 
 **What the skill holds in context:** After `arch_anchor`, the skill holds `ANCHOR_HASH = result.data.hash`. This is not re-read from `anchor_state` during EYES — the in-context value is authoritative for the session.
 
@@ -249,7 +270,7 @@ Unit tests cover each tool in isolation using a temp directory fixture (not `~/.
 - `arch_retro_append`: `.arch/` exists → writes to project scope; absent → falls back to global
 - `arch_solo_declare`: creates marker file; second call → `created: true` (idempotent)
 
-**Integration test:** a single scenario that runs `arch_anchor` → `arch_solo_declare` → `arch_retro_append` → `arch_shift_read` → `arch_shift_write` against a temp git repo, verifying the files written match the schema.
+**Integration test:** a single scenario that runs `arch_anchor` → `arch_solo_declare` → `arch_retro_append` → `arch_session_increment` → `arch_shift_read` against a temp git repo, verifying the files written match the schema and `session_task_count` is 1.
 
 ---
 
