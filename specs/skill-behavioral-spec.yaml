@@ -1,4 +1,4 @@
-version: "1.7.1"
+version: "1.8.0"
 description: >
   Behavioral integrity spec for ARCH SKILL.md.
   Rules encode invariants whose violation would silently break the protocol.
@@ -50,10 +50,10 @@ rules:
   # ── ANCHOR: consistency across Session State and PUSHBACK ─────────────────
 
   - id: anchor-session-state-captures-hash
-    description: "Session State ANCHOR compression must also update ANCHOR_HASH"
+    description: "Session State ANCHOR compression must call arch_anchor to capture hash"
     type: section_must_contain
     section: "Session State"
-    text: "git rev-parse HEAD"
+    text: "arch_anchor"
 
   - id: anchor-session-state-notes-hash
     description: "Session State must reference ANCHOR_HASH"
@@ -69,10 +69,10 @@ rules:
 
   - id: anchor-wording-consistency
     description: >
-      The key hash-capture phrase must appear in both ANCHOR step and
+      The arch_anchor MCP tool call must appear in both ANCHOR step and
       Session State — verifies identical mechanical behavior in both contexts
     type: cross_section_phrase_match
-    phrase: "git rev-parse HEAD"
+    phrase: "arch_anchor"
     sections:
       - step: ANCHOR
       - section: "Session State"
