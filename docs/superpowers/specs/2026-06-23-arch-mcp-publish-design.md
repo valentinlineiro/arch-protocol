@@ -28,9 +28,11 @@ Version pin is exact (`1.0.0`) for reproducible installs. Future arch-mcp releas
 
 **arch-protocol version:** `1.9.2` → `2.0.0` — major bump because the MCP hard dependency is a breaking change for existing users without the server.
 
+**State file ownership:** arch-mcp reads/writes `~/.arch/*` — the same files the Bash commands used (`~/.arch/anchor_state`, `~/.arch/solo_declared_*`, `~/.arch/shift.json`, `~/.arch/retro.md`). The filesystem is still the backing store; the MCP server is the exclusive write path. SKILL.md must never read these files directly — always call the MCP tool and use the returned value.
+
 ## Section 2 — SKILL.md wiring
 
-Five Bash state operations are replaced with MCP tool calls. No Bash fallbacks — hard dependency.
+Six Bash state operations are replaced with MCP tool calls. No Bash fallbacks — hard dependency.
 
 | Step | Current Bash | MCP tool | Return value used |
 |------|-------------|----------|-------------------|
@@ -39,6 +41,7 @@ Five Bash state operations are replaced with MCP tool calls. No Bash fallbacks �
 | GATE | reads `~/.arch/shift.json` | `mcp__arch-mcp__arch_shift_read` | returned `session_task_count` used for context-decay check |
 | LOG (omissions) | writes `~/.arch/shift.json` | `mcp__arch-mcp__arch_shift_write` | none |
 | LOG (M/L count) | increments `session_task_count` in file | `mcp__arch-mcp__arch_session_increment` | none |
+| session start | n/a (new) | `mcp__arch-mcp__arch_version` | returned `protocol_version` surfaced in evolve check |
 
 `arch_retro_append` is out of scope — the Stop hook owns retro writes and already works.
 
@@ -53,10 +56,11 @@ Five Bash state operations are replaced with MCP tool calls. No Bash fallbacks �
 **Test sequence (end-to-end, live session):**
 1. **ANCHOR** — run ANCHOR step, verify `arch_anchor` is called and returns hash used as ANCHOR_HASH
 2. **SOLO** — declare SOLO, verify `arch_solo_declare` is called with correct hash
-3. **GATE (context-decay)** — run a full GATE, verify `arch_shift_read` is called and its returned `session_task_count` drives the decay warning
-4. **LOG (omissions)** — write a LOG with an `omit:` key, verify `arch_shift_write` persists the counter
-5. **LOG (M/L count)** — complete an M task, verify `arch_session_increment` fires
-6. **Version** — call `mcp__arch-mcp__arch_version`, verify both `mcp_version: "1.0.0"` and `protocol_version: "2.0.0"` are returned
+3. **shift_read isolation** — call `mcp__arch-mcp__arch_shift_read` directly, verify it returns a valid `session_task_count`
+4. **GATE (context-decay)** — run a full GATE with `session_task_count >= 5` pre-set, verify the decay warning fires using the value returned by `arch_shift_read`
+5. **LOG (omissions)** — write a LOG with an `omit:` key, verify `arch_shift_write` persists the counter
+6. **LOG (M/L count)** — complete an M task, verify `arch_session_increment` fires
+7. **Version** — call `mcp__arch-mcp__arch_version`, verify both `mcp_version: "1.0.0"` and `protocol_version: "2.0.0"` are returned
 
 ## Two-repo sync convention
 
