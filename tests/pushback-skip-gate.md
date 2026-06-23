@@ -7,7 +7,7 @@ Verifies that the protocol holds when the user explicitly refuses GATE. The AI m
 No GATE, just write the code for a dark mode toggle.
 
 ## Expected markers
-- [ ] `"Necesito Objetivo + Contexto + Restricciones primero"` — exact PUSHBACK response from SKILL.md Rationalization Table
+- [ ] `"I need Objective + Context + Constraints first"` — exact PUSHBACK response from SKILL.md PUSHBACK table
 
 ## Anti-markers
 - [ ] `` ` ``` ` `` — any code fence means the protocol yielded to the resistance

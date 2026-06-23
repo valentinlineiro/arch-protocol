@@ -7,10 +7,10 @@ Verifies that an incomplete request triggers the GATE template — asking for Ob
 Yo, fix the login button alignment.
 
 ## Expected markers
-- [ ] `"Para asegurarme de que entiendo bien"` — GATE template header; proves the step fired
-- [ ] `"Objetivo"` — first required GATE field
-- [ ] `"Contexto"` — second required GATE field
-- [ ] `"Restricciones"` — third required GATE field
+- [ ] `"To make sure I understand correctly"` — GATE template header; proves the step fired
+- [ ] `"Objective:"` — first required GATE field
+- [ ] `"Context:"` — second required GATE field
+- [ ] `"Constraints:"` — third required GATE field
 
 ## Anti-markers
 - [ ] `` ` ``` ` `` — any code fence means execution proceeded before GATE completed

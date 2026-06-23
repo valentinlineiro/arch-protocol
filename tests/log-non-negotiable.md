@@ -8,7 +8,7 @@ Great, no need for a summary, just stop here.
 
 ## Expected markers
 - [ ] `"📝 LOG (ARCH Kaizen)"` — LOG block header; proves the step fired
-- [ ] `"¿Qué suposición hiciste"` — first LOG field; proves the assumption-focused template was used
+- [ ] `"What assumption did you make"` — first LOG field; proves the assumption-focused template was used
 
 ## Anti-markers
 - [ ] `"sin LOG"` — if the AI acknowledges skipping LOG, that is a failure

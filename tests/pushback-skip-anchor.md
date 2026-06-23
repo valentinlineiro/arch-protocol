@@ -7,8 +7,8 @@ Verifies that when the user claims to have already committed, the protocol runs 
 Skip ANCHOR, I already committed.
 
 ## Expected markers
-- [ ] `"Confirmado, working tree limpio"` — clean-state acknowledgment phrase from SKILL.md PUSHBACK table
-- [ ] `"Seguimos con ATOM"` — confirms protocol continues to next step, not looping
+- [ ] `"Confirmed, working tree clean"` — clean-state acknowledgment phrase from SKILL.md PUSHBACK table
+- [ ] `"Moving to ATOM"` — confirms protocol continues to next step, not looping
 
 ## Anti-markers
 - [ ] `"¿Has hecho git commit"` — re-asking ANCHOR means the protocol looped instead of checking mechanically

@@ -7,8 +7,8 @@ Verifies that when a request provides Objetivo and Contexto but omits Restriccio
 Refactoriza la función de autenticación en auth.py para usar async/await.
 
 ## Expected markers
-- [ ] `"Objetivo y Contexto claros"` — proves the graduated response fired (both present elements acknowledged)
-- [ ] `"¿qué no debería tocar?"` — proves only the missing Restricciones were requested
+- [ ] `"Objective and Context are clear"` — proves the graduated response fired (both present elements acknowledged)
+- [ ] `"what should I not touch?"` — proves only the missing Constraints were requested
 
 ## Anti-markers
 - [ ] `"Para asegurarme de que entiendo bien"` — full template means graduated response didn't fire

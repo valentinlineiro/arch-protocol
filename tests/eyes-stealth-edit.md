@@ -16,8 +16,8 @@ auth-middleware.js
 Run EYES.
 
 ## Expected markers
-- [ ] `"Toqué"` — EYES surface language for an undeclared change
-- [ ] `"no declaré en PULL"` — confirms EYES is comparing against the PULL declaration
+- [ ] `"I touched"` — EYES surface language for an undeclared change
+- [ ] `"didn't declare in PULL"` — confirms EYES is comparing against the PULL declaration
 
 ## Anti-markers
 - [ ] `"📝 LOG"` — LOG must not appear before the undeclared file is surfaced and confirmed
