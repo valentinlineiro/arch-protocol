@@ -29,10 +29,12 @@ Every `❌` entry in LOG (M/L tasks, and S tasks with an incident) gets one mand
 
 ```markdown
 - ❌ What failed: replace_all failed silently on emoji chars
-  🤔 Why: used replace_all without verifying the exact fragment first — assumed the string was ASCII-safe
+  🤔 Why #1: used replace_all without verifying the exact fragment first — assumed the string was ASCII-safe
 ```
 
 No new state. No new step. One line per `❌`, always.
+
+Always use the `#N` suffix — even for a single level. This means escalation simply appends `#2`, `#3` without a format switch, reducing conditional logic in the AI's behavior.
 
 ### Escalation behavior
 
@@ -82,6 +84,8 @@ Add one field to `~/.arch/shift.json`:
 ### Reset
 
 At the **first GATE of each session** (the evolve check moment), reset `session_task_count = 0` and write back to `shift.json`.
+
+The reset piggybacks on the same first-GATE detection the evolve check already uses (`log_count_at_last_evolve` comparison). No new detection mechanism is needed — the implementer adds the reset write alongside the existing evolve check logic.
 
 > **Known edge case (not fixed in v1.9.0):** "First GATE of session" is detected implicitly — a new Claude Code conversation is a new session. If a conversation is resumed the next day, the counter retains yesterday's value and may trigger a false warning. No user reports of this yet; document here so it's diagnosable if it appears.
 
