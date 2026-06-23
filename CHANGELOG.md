@@ -9,6 +9,45 @@ Versioning follows [Semantic Versioning](https://semver.org/):
 
 ---
 
+## [2.1.0] — 2026-06-23
+
+FEED step: closes the LOG→GATE feedback loop.
+
+### Added
+- **FEED step (step 1 of 8)** — calls `arch_feed_read` before every task (including the first of a new session). If the last LOG had an incident (`❌`/`🔄` fields), surfaces `calibrated_prior` + `constraint` and prepends the constraint to GATE's Constraints field. If the last LOG was clean or no retro exists, emits `✓ FEED: no constraints carried forward.` and continues immediately. Carried constraints never compress even on S tasks.
+- **`arch_feed_read` MCP tool** — published in `@valentinlineiro/arch-mcp@1.1.0`. Reads `.arch/retro.md` (local first) then `~/.arch/retro.md` (with project-path prefix matching for global entries). Returns `{ has_feed: false }` for clean logs and `{ has_feed: true, last_commit, calibrated_prior, constraint }` for incident entries.
+- **`skip_feed` SHIFT key** — added to the controlled omission vocabulary and `shift.json` schema.
+- **Ghost Constraint fix** — `on-stop.sh` now captures `📝 LOG (S): no incidents` lines (previously only full `## 📝 LOG` blocks were persisted). Without this fix, a clean S-task never cleared the last incident from `retro.md`, causing stale constraints to carry forward indefinitely.
+- **Two new scenario tests** — `feed-carry-forward.md` (constraint surfaced before GATE) and `feed-ghost-constraint.md` (clean S-task clears prior constraint).
+
+### Changed
+- All steps renumbered: GATE→2, ANCHOR→3, ATOM→4, PULL→5, SOLO→6, EYES→7, LOG→8.
+- ATOM table updated: "7 steps" → "8 steps"; EYES/LOG cross-references updated to "steps 7–8".
+- Session State section: ANCHOR and PULL references updated to steps 3 and 5.
+- SKILL.md comment clarified: now explicitly identifies it as the Claude Code MCP adapter for the platform-agnostic `PROTOCOL.md`.
+
+---
+
+## [2.0.1] — 2026-06-23
+
+Plugin re-fetch patch: corrected MCP tool prefix in SKILL.md.
+
+### Fixed
+- **MCP tool prefix** — SKILL.md was calling `arch_anchor` etc. without the plugin-namespaced prefix. Corrected to `mcp__plugin_arch-protocol_arch-mcp__arch_anchor` (and similarly for all other arch-mcp tools).
+
+---
+
+## [2.0.0] — 2026-06-23
+
+MCP-backed state operations: all arch-mcp tools wired into SKILL.md.
+
+### Added
+- **`mcpServers` in plugin.json** — bundles `@valentinlineiro/arch-mcp@1.0.0` as the plugin's MCP server, auto-installed with the plugin.
+- **MCP tool wiring in SKILL.md** — ANCHOR, SOLO, LOG, SHIFT, and session tracking steps now call arch-mcp tools directly (`arch_anchor`, `arch_solo_declare`, `arch_retro_append`, `arch_shift_read`/`write`, `arch_session_increment`) instead of raw Bash.
+- **PROTOCOL.md** — platform-agnostic specification extracted from SKILL.md. Uses abstract `TOOL:` notation; intended as the source for future Cursor/Aider/Copilot ports. SKILL.md is now the Claude Code adapter.
+
+---
+
 ## [1.8.1] — 2026-06-22
 
 SOLO enforcement: explicit instruction to write `solo_declared_<hash>` to disk.

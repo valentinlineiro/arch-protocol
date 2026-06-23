@@ -12,16 +12,17 @@ These aren't model problems. They're process problems. ARCH is the process fix.
 
 ## What is ARCH?
 
-**ARCH (Autonomous Routing & Context Hierarchy)** is a 7-step discipline protocol that runs on top of Claude Code. Inspired by the Toyota Production System, it forces Claude to declare context before generating code, stay within agreed scope, and leave a traceable record of every change.
+**ARCH (Autonomous Routing & Context Hierarchy)** is an 8-step discipline protocol that runs on top of Claude Code. Inspired by the Toyota Production System, it forces Claude to declare context before generating code, stay within agreed scope, and leave a traceable record of every change.
 
 It's not a better prompt. It's a protocol that makes any prompt work better.
 
 ---
 
-## The 7 Steps
+## The 8 Steps
 
 | Step | What it enforces |
 | :--- | :--- |
+| **FEED** | Reads the last task's retrospective and surfaces any carried constraint before the session begins. Closes the LOG→GATE feedback loop. |
 | **GATE** | Claude states the goal, files, and constraints **before writing any code**. If anything is missing, it asks. Hallucination filter. |
 | **ANCHOR** | Confirms a Git commit exists as a restore point. No safety net, no change. |
 | **ATOM** | If the task is large (>5 files or >3 responsibilities), Claude splits it before proceeding. |

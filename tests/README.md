@@ -21,6 +21,9 @@ Behavioral scenario tests for the ARCH protocol skill (`plugins/arch-protocol/sk
 | `pushback-skip-anchor.md` | "skip ANCHOR" → ack + continue, no loop |
 | `pushback-in-a-hurry.md` | "in a hurry" → Red Flag → GATE restart |
 | `atom-l-classification.md` | 6 files / 4 responsibilities → L + decomposition + model hint |
+| `anchor-hash-persistence.md` | Anchor hash persists across tasks via `arch_anchor` MCP tool |
+| `feed-carry-forward.md` | Incident constraint surfaces in FEED before GATE fires |
+| `feed-ghost-constraint.md` | Clean S-task LOG clears prior constraint (Ghost Constraint regression) |
 
 ## Future automation
 
