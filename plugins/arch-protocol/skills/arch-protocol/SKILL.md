@@ -27,9 +27,9 @@ description: Use when the user invokes ARCH, mentions the ARCH protocol, or want
 
 **First session check:** If `~/.arch/retro.md` does not exist, this is the user's first ARCH session. Before GATE, say: *"Starting ARCH for the first time. Ready to begin?"*
 
-**Evolve check (first GATE of session):** Count `## 📝 LOG` sections in `~/.arch/retro.md`. If `(count − log_count_at_last_evolve) ≥ 5`, say once before proceeding: *"You have 5+ new LOGs since the last arch-evolve — run `arch-evolve` whenever you're ready."* Then continue to GATE immediately.
+**Evolve check + session reset (first GATE of session):** Count `## 📝 LOG` sections in `~/.arch/retro.md`. If `(count − log_count_at_last_evolve) ≥ 5`, say once before proceeding: *"You have 5+ new LOGs since the last arch-evolve — run `arch-evolve` whenever you're ready."* Then reset `session_task_count` to `0` in `~/.arch/shift.json`. Then continue to GATE immediately.
 
-**1. GATE** — Before generating any code, verify the request has all three:
+**1. GATE** — Read `session_task_count` from `~/.arch/shift.json`. If `session_task_count >= 5`, say: *"⚠️ You've completed N M/L tasks this session. Context decay is likely. Continue, or stop here and start fresh next session?"* Wait for the user's response before proceeding. Then verify the request has all three:
 - ✅ Objective: clear goal
 - ✅ Context: files or data
 - ✅ Constraints: what not to touch
@@ -109,6 +109,12 @@ If scope has grown beyond what ATOM approved: apply ATOM before continuing — d
 
 **7. LOG** — Close every task. LOG is non-negotiable, even if the user says "just give me the code", "no summary", or "stop there".
 
+**Execution order within LOG:**
+1. Read `~/.arch/shift.json` — determine Why depth for each `omit:` key (single by default; see SHIFT for escalation)
+2. Write the LOG block
+3. If M or L task: increment `session_task_count` by 1 in `~/.arch/shift.json`
+4. Update `~/.arch/shift.json` — persist omission counters and updated session count
+
 **S tasks (no incident):** `📝 LOG (S): no incidents · commit: <type>: <what changed>` — do not increment `shift.json`.
 
 **S tasks (incident) and all M/L tasks:** use the full block:
@@ -116,11 +122,12 @@ If scope has grown beyond what ATOM approved: apply ATOM before continuing — d
 ## 📝 LOG (ARCH Kaizen)
 - ✅ What assumption did you make about the code (or context) that turned out to be correct or incorrect? (if none: "no incidents")
 - ❌ What failed or caused friction: ... [omit:<key> if a protocol step was skipped or violated]
+  🤔 Why #1: [why did that happen?]
 - 🔄 What you'd do differently next time: ...
 - Commit: `<feat|fix|refactor|test|docs>: <what changed in one line>`
 ```
 > The hook persists this block to `~/.arch/retro.md` automatically. Once persisted, do not re-reference previous LOG blocks in responses — `~/.arch/retro.md` is the source of truth.
-> After writing LOG, increment the matching counter in `~/.arch/shift.json` if an `omit:` key was recorded. If no omission occurred, do not increment.
+> After writing LOG, increment the matching omission counter in `~/.arch/shift.json` if an `omit:` key was recorded. If no omission occurred, do not increment the omission counter. Always increment `session_task_count` for M/L tasks (step 3 above).
 
 ## Session State
 
@@ -143,6 +150,7 @@ For S tasks (where ATOM already compressed GATE+PULL into one block), the PULL c
 **State file** — read and write `~/.arch/shift.json`:
 ```json
 {
+  "session_task_count": 0,
   "omissions": {
     "skip_gate": 0,
     "skip_anchor": 0,
@@ -169,6 +177,17 @@ For S tasks (where ATOM already compressed GATE+PULL into one block), the PULL c
 
 If the same key reaches 3 in the last 5 tasks (consecutive or not), name the pattern:
 *"I've noticed that in 3 of the last 5 tasks [you skipped X]. Want to define a fixed template?"*
+
+**Why depth escalation:** When a key is in escalated state (reached 3 in last 5), LOG for that task and subsequent tasks uses a multi-level chain instead of a single `🤔 Why #1:`:
+
+```markdown
+- ❌ What failed or caused friction: ... [omit:<key>]
+  🤔 Why #1: [immediate cause]
+  🤔 Why #2: [deeper cause]
+  🤔 Why #N (root cause): [systemic or environmental cause — stop when root cause is named, not another symptom]
+```
+
+Drop back to single `🤔 Why #1:` after 2 consecutive clean tasks on that key — same rule as the counter reset below.
 
 Reset `last_omission_cleared` to the current date and zero all counters when the pattern is named. Reset individual counters when an omission stops appearing for 2 consecutive tasks.
 
@@ -201,8 +220,6 @@ If the user explicitly refuses a step, note it in the LOG under `❌` and contin
 | "The user said no retrospective, I'll respect that" | LOG is protocol, not courtesy. Add it even when asked to skip it. |
 | "I don't need to ask about git, they probably committed" | ANCHOR is always mechanical. Run `git status --short` every time. |
 | "This is a quick fix, the workflow is overkill" | The workflow exists precisely for quick fixes. Run it. |
-| "This string looks safe to edit with replace_all" | Special chars and emoji fail silently — read the exact fragment first. |
-| "The right place to add this is obvious" | Verify the canonical file before writing — two tasks have gone to the wrong location on the first attempt. |
 
 ## Batch Mode
 
