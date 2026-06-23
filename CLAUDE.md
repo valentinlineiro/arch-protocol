@@ -36,3 +36,6 @@ Push this repo to GitHub. Anyone can then add it as a marketplace:
 - `SKILL.md` frontmatter `description` field: triggering conditions only, never workflow summary (per agentskills SDO guidance)
 - User-facing prompts remain in Spanish — that's intentional, part of the protocol's UX
 - Follow `superpowers:writing-skills` TDD process when editing the skill: baseline test → write → refactor
+
+## ARCH Protocol
+This project uses the ARCH protocol. Apply it to every task.
