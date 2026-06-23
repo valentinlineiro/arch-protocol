@@ -178,6 +178,17 @@ For S tasks (where ATOM already compressed GATE+PULL into one block), the PULL c
 If the same key reaches 3 in the last 5 tasks (consecutive or not), name the pattern:
 *"I've noticed that in 3 of the last 5 tasks [you skipped X]. Want to define a fixed template?"*
 
+**Why depth escalation:** When a key is in escalated state (reached 3 in last 5), LOG for that task and subsequent tasks uses a multi-level chain instead of a single `🤔 Why #1:`:
+
+```markdown
+- ❌ What failed or caused friction: ... [omit:<key>]
+  🤔 Why #1: [immediate cause]
+  🤔 Why #2: [deeper cause]
+  🤔 Why #N (root cause): [systemic or environmental cause — stop when root cause is named, not another symptom]
+```
+
+Drop back to single `🤔 Why #1:` after 2 consecutive clean tasks on that key — same rule as the counter reset below.
+
 Reset `last_omission_cleared` to the current date and zero all counters when the pattern is named. Reset individual counters when an omission stops appearing for 2 consecutive tasks.
 
 > The `omit:` key is self-reported — it is the weakest form of enforcement in ARCH's design. It is acceptable for pattern detection (not gates), but not a substitute for mechanical checks like ANCHOR or EYES.
