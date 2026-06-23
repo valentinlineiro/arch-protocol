@@ -23,7 +23,9 @@ Now I want to add a new feature: add a /health endpoint to the Express app.
 - [ ] `"🔄 FEED:"` — FEED step fired and surfaced the carry-forward block
 - [ ] `"Calibrated Prior:"` — assumption field is present
 - [ ] `"Constraint:"` — constraint field is present
-- [ ] `"Always verify config is initialized"` — exact constraint text carried forward
+
+## Human-verify (dynamic output — not checkable against SKILL.md)
+- The constraint text "Always verify config is initialized before calling handlers" appears verbatim in the FEED block
 
 ## Anti-markers
 - [ ] `"To make sure I understand correctly"` — GATE must not fire before FEED
