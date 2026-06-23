@@ -109,6 +109,12 @@ If scope has grown beyond what ATOM approved: apply ATOM before continuing — d
 
 **7. LOG** — Close every task. LOG is non-negotiable, even if the user says "just give me the code", "no summary", or "stop there".
 
+**Execution order within LOG:**
+1. Read `~/.arch/shift.json` — determine Why depth for each `omit:` key (single by default; see SHIFT for escalation)
+2. Write the LOG block
+3. If M or L task: increment `session_task_count` by 1 in `~/.arch/shift.json`
+4. Update `~/.arch/shift.json` — persist omission counters and updated session count
+
 **S tasks (no incident):** `📝 LOG (S): no incidents · commit: <type>: <what changed>` — do not increment `shift.json`.
 
 **S tasks (incident) and all M/L tasks:** use the full block:
@@ -116,11 +122,12 @@ If scope has grown beyond what ATOM approved: apply ATOM before continuing — d
 ## 📝 LOG (ARCH Kaizen)
 - ✅ What assumption did you make about the code (or context) that turned out to be correct or incorrect? (if none: "no incidents")
 - ❌ What failed or caused friction: ... [omit:<key> if a protocol step was skipped or violated]
+  🤔 Why #1: [why did that happen?]
 - 🔄 What you'd do differently next time: ...
 - Commit: `<feat|fix|refactor|test|docs>: <what changed in one line>`
 ```
 > The hook persists this block to `~/.arch/retro.md` automatically. Once persisted, do not re-reference previous LOG blocks in responses — `~/.arch/retro.md` is the source of truth.
-> After writing LOG, increment the matching counter in `~/.arch/shift.json` if an `omit:` key was recorded. If no omission occurred, do not increment.
+> After writing LOG, increment the matching omission counter in `~/.arch/shift.json` if an `omit:` key was recorded. If no omission occurred, do not increment the omission counter. Always increment `session_task_count` for M/L tasks (step 3 above).
 
 ## Session State
 
