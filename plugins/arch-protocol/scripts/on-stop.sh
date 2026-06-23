@@ -26,12 +26,17 @@ RESPONSE=$(jq -rs '
 
 [ -z "$RESPONSE" ] && exit 0
 
-# Extract LOG block: from header until the next ## section or end of content
+# Extract full LOG block: from header until the next ## section or end of content
 LOG_BLOCK=$(echo "$RESPONSE" | awk '
     /## 📝 LOG \(ARCH Kaizen\)/ { found=1 }
     found && /^## / && !/ARCH Kaizen/ { found=0 }
     found { print }
 ')
+
+# If no full block, look for clean S-task LOG line
+if [ -z "$LOG_BLOCK" ]; then
+    LOG_BLOCK=$(echo "$RESPONSE" | grep '📝 LOG (S): no incidents' | tail -1)
+fi
 
 [ -z "$LOG_BLOCK" ] && exit 0
 
