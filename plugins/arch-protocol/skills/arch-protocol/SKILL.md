@@ -27,7 +27,7 @@ description: Use when the user invokes ARCH, mentions the ARCH protocol, or want
 
 **First session check:** If `~/.arch/retro.md` does not exist, this is the user's first ARCH session. Before GATE, say: *"Starting ARCH for the first time. Ready to begin?"*
 
-**Evolve check (first GATE of session):** Count `## 📝 LOG` sections in `~/.arch/retro.md`. If `(count − log_count_at_last_evolve) ≥ 5`, say once before proceeding: *"You have 5+ new LOGs since the last arch-evolve — run `arch-evolve` whenever you're ready."* Then continue to GATE immediately.
+**Evolve check + session reset (first GATE of session):** Count `## 📝 LOG` sections in `~/.arch/retro.md`. If `(count − log_count_at_last_evolve) ≥ 5`, say once before proceeding: *"You have 5+ new LOGs since the last arch-evolve — run `arch-evolve` whenever you're ready."* Then reset `session_task_count` to `0` in `~/.arch/shift.json`. Then continue to GATE immediately.
 
 **1. GATE** — Before generating any code, verify the request has all three:
 - ✅ Objective: clear goal
@@ -143,6 +143,7 @@ For S tasks (where ATOM already compressed GATE+PULL into one block), the PULL c
 **State file** — read and write `~/.arch/shift.json`:
 ```json
 {
+  "session_task_count": 0,
   "omissions": {
     "skip_gate": 0,
     "skip_anchor": 0,
